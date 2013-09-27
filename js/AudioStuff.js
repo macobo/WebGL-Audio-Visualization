@@ -1,3 +1,5 @@
+// from https://github.com/arirusso/d3-audio-spectrum
+
 function Audio(context, sampleRate) {
   this.context = context;
   this.sampleRate = sampleRate || 44100;
@@ -97,7 +99,7 @@ SpectrumAnalyzer.prototype.play = function(callback) {
   var analyzer = this;
   this.audio.play(function() {
     analyzer.audio.connectProcessor(analyzer.analysis);
-    callback();
+    if (callback) callback();
   });
 };
 
@@ -141,6 +143,8 @@ SpectrumAnalyzer.prototype.audioReceived = function(event) {
     analyzer.populateData(index, counter);
   });
 };
+
+
 
 function InputAudioSource(context) {
   this.context = context;

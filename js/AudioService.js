@@ -22,6 +22,9 @@ angular.module('audioVizApp')
 
     return {
       "audio": audio,
-      "model": model
+      "model": model,
+      "spectrum": function() {
+        return model.spectrum.data;
+      }
     };
   });
