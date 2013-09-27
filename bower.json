@@ -1,0 +1,18 @@
+{
+  "name": "WebGL-Audio-Visualization",
+  "version": "0.0.0",
+  "homepage": "https://github.com/macobo/WebGL-Audio-Visualization",
+  "authors": [
+    "Karl-Aksel Puulmann <macobo@ut.ee>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules"
+  ],
+  "devDependencies": {
+    "angular-unstable": "~1.1.5",
+    "dsp.js": "*"
+  }
+}

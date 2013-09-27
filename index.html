@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html ng-app="audioVizApp">
 	<head>
 		<title>AudioViz</title>
 		<meta charset="utf-8">
@@ -7,7 +7,10 @@
 		
 		<link  href="css/main.css" rel="stylesheet"/>
 	</head>
-<body>
+<body ng-controller="MainController">
+	<div id="sidebar">
+		<h1>Sidebar</h1>
+	</div>
 	<!-- three.js container -->
   <div id="container"></div>
 	<!-- info on screen display -->
@@ -16,6 +19,15 @@
 			- <i>p</i> for screenshot
 		</div> 
 	</div> 
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+	<script src="components/angular-unstable/angular.min.js"></script>
+	<script src="components/dsp.js/dsp.js"></script>
+
+	<script src="js/app.js"></script>
+	<script src="js/MainController.js"></script>
+	<script src="js/AudioStuff.js"></script>
 
 	<script src="vendor/three.js/Three.js"></script>
 	<script src="vendor/three.js/Detector.js"></script>
@@ -51,7 +63,8 @@
 				Detector.addGetWebGLMessage();
 				return true;
 			}
-			renderer.setSize( window.innerWidth, window.innerHeight );
+			var width = $(window).width() - $("#sidebar").width();
+			renderer.setSize( width, window.innerHeight );
 			document.getElementById('container').appendChild(renderer.domElement);
 
 			// add Stats.js - https://github.com/mrdoob/stats.js
@@ -64,7 +77,7 @@
 			scene = new THREE.Scene();
 
 			// put a camera in the scene
-			camera	= new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000 );
+			camera	= new THREE.PerspectiveCamera(35, width / window.innerHeight, 1, 10000 );
 			camera.position.set(0, 0, 5);
 			scene.add(camera);
 

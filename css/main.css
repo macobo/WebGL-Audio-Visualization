@@ -1,30 +1,52 @@
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\000031}}
 body {
-	overflow	: hidden;
-	padding		: 0;
-	margin		: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  color: #555555;
+  background-color: #bbbbbb;
+  font-family: arial;
+  font-size: 100%;
+}
 
-	color		: #222;
-	background-color: #BBB;
-	font-family	: arial;
-	font-size	: 100%;
-}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000311}}
 #info .top {
-	position	: absolute;
-	top		: 0px;
-	width		: 100%;
-	padding		: 5px;
-	text-align	: center;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  padding: 5px;
+  text-align: center;
 }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000317}}
 #info a {
-	color		: #66F;
-	text-decoration	: none;
+  color: #6666ff;
+  text-decoration: none;
 }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000320}}
 #info a:hover {
-	text-decoration	: underline;
+  text-decoration: underline;
 }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000322}}
 #info .bottom {
-	position	: absolute;
-	bottom		: 0px;
-	right		: 5px;
-	padding		: 5px;
+  position: absolute;
+  bottom: 0px;
+  right: 5px;
+  padding: 5px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000329}}
+#sidebar {
+  color: #eeeeee;
+  background-color: rgba(51, 51, 51, 0.9);
+  position: absolute;
+  width: 200px;
+  min-height: 100%;
+  padding: 4px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000337}}
+#container {
+  position: absolute;
+  min-height: 100%;
+  margin-left: 200px;
 }

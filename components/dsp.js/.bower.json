@@ -1,0 +1,14 @@
+{
+  "name": "dsp.js",
+  "homepage": "https://github.com/corbanbrook/dsp.js",
+  "_release": "a7b2e97b13",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "a7b2e97b1385a43083e50ed6dc81d697f0e57e28"
+  },
+  "_source": "git://github.com/corbanbrook/dsp.js.git",
+  "_target": "*",
+  "_originalSource": "dsp.js",
+  "_direct": true
+}

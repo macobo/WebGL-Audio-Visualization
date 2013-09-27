@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Load JQuery and JQuery-UI -->
+    <link type="text/css" href="css/hot-sneaks/jquery-ui-1.8.custom.css" rel="stylesheet" />  
+    <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.8.custom.min.js"></script>
+    
+    <!-- Load Processing.js -->
+    <script language="javascript" src="js/processing.js"></script>
+    <script language="javascript" src="js/init.js"></script>
+
+    <!-- Load DSP.js -->
+    <script src="../dsp.js"></script>
+    <script>
+      $(function() {
+        // Amplitude 
+        $('#amp'   ).slider({ orientation: 'vertical', range: 'min', value: 0.7,  min: 0,    max: 1,    step: 0.01, slide: changeAmplitude });
+
+        // Amp. Envelope
+        $('#A'     ).slider({ orientation: 'vertical', range: 'min', value: 0.02, min: 0.01, max: 1.0,  step: 0.01 });
+        $('#D'     ).slider({ orientation: 'vertical', range: 'min', value: 0.6,  min: 0,    max: 1.0,  step: 0.01 });
+        $('#S'     ).slider({ orientation: 'vertical', range: 'min', value: 0.3,  min: 0,    max: 1.0,  step: 0.01 });
+        $('#R'     ).slider({ orientation: 'vertical', range: 'min', value: 0.8,  min: 0,    max: 5.0,  step: 0.01 });
+
+        // Filter
+        $('#cutoff').slider({ orientation: 'vertical', range: 'min', value: 880,  min: 60,   max: 5000, step: 1, slide: changeFilter });
+        $('#res'   ).slider({ orientation: 'vertical', range: 'min', value: 0.1,  min: 0,  max: 1, step: 0.01, slide: changeFilter });
+
+        // Filter Envelope
+        $('#FA'    ).slider({ orientation: 'vertical', range: 'min', value: 0.02, min: 0.01, max: 1.0,  step: 0.01, slide: changeFilterEnvelope });
+        $('#FD'    ).slider({ orientation: 'vertical', range: 'min', value: 0.6,  min: 0,    max: 1.0,  step: 0.01, slide: changeFilterEnvelope });
+        $('#FS'    ).slider({ orientation: 'vertical', range: 'min', value: 0.3,  min: 0,    max: 1.0,  step: 0.01, slide: changeFilterEnvelope });
+        $('#FR'    ).slider({ orientation: 'vertical', range: 'min', value: 0.8,  min: 0,    max: 5.0,  step: 0.01, slide: changeFilterEnvelope });
+
+        // Osc Mix
+        $('#osc_mix').slider({ orientation: 'vertical', range: 'min', value: 0.5, min: -0.1, max: 1.1,  step: 0.01, slide: changeAmplitude });
+        
+        changeAmplitude(); // reset amp and mix
+
+        // Debug toggle
+        $("#debug_toggle").click(function() {
+          $("#debug").html("");
+        });
+
+        // curve automation toggles
+        $("#curve_cutoff_toggle").click(function() {
+          if ( $("#curve_cutoff_toggle").attr("checked") ) {
+            SHOW_SEQUENCER = true;
+            CURVE_EDITOR = true;
+          }
+        });
+        $("#curve_res_toggle").click(function() {
+          if ( $("#curve_res_toggle").attr("checked") ) {
+            SHOW_SEQUENCER = true;
+            CURVE_EDITOR = true;
+          }
+        });
+
+        // Filter type radio selection
+        $("input[name='filter_type']").change(changeFilter);
+        changeFilter(); // reset filter to slider defaults
+
+        // Oscillator waveform select 
+        $("#osc1_waveform").change(changeOsc1);
+        $("#osc2_waveform").change(changeOsc2);
+
+        // Oscillator osctave select 
+        $("#osc1_octave").change(changeOsc1);
+        $("#osc2_octave").change(changeOsc2);
+        
+        // Oscillator osctave select 
+        $("#osc1_semi").change(changeOsc1);
+        $("#osc2_semi").change(changeOsc2);
+
+        changeOsc1(); // reset oscillator to select defaults
+        changeOsc2(); 
+      });
+    </script>
+
+    <style type="text/css">
+      body, * {
+        font-family: Arial, sans-serif;
+        font-size: 12px; 
+      }
+
+      .control {
+        padding: 5px;
+        border-left: 1px dotted #ccc;
+        float: left;
+        margin-right: 5px;
+      }
+      .control table td {
+        padding: 10px;
+        width: 20px;
+        color: #999;
+        font-size: 12px;
+      }
+      .control h3 {
+        margin: 0;
+        padding:0;
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+      .control #debug {
+        background-color: #FFF;
+        font-size: 12px;
+        width: 300px;
+      }
+      .slider {
+        margin-bottom: 16px;
+        width: 8px;
+      }
+      
+      .ui-slider .ui-slider-handle {
+        width: 8px;
+        margin-left: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      var SHOW_SEQUENCER = true;
+      var CURVE_EDITOR = false;
+    
+      // Setup shared variables
+      var sampleRate = 44100;
+      var bufferSize = 1024;
+      var bufferTime = Math.floor(1000 / (sampleRate / bufferSize));
+      
+      var frequency  = 440;
+      var amplitude  = 0.7; // Default amplitude at 70%
+      
+      var changeAmplitude = function() {
+        amplitude = $('#amp').slider('option', 'value'); 
+        $('#ampLevel').html(Math.round(amplitude * 100) + "%");
+        
+        var mix = $('#osc_mix').slider('option', 'value');
+        
+        mix = mix > 1 ? 1 : mix;
+        mix = mix < 0 ? 0 : mix;
+        
+        osc2_amplitude = 1 - (osc1_amplitude = mix);
+  
+ 
+        osc1_amplitude *= amplitude;
+        osc2_amplitude *= amplitude;
+      };
+
+      var filter = new IIRFilter2(0, 0, 0, sampleRate);
+
+      var changeFilter = function() {
+        filter.set($('#cutoff').slider('option', 'value'), $('#res').slider('option', 'value'));
+        filter.type = $("input[name='filter_type']:checked").val();
+      };
+
+      var changeFilterEnvelope = function() {
+      };
+      
+      var osc;
+
+      var osc1;
+      var osc2;
+      
+      var osc1_waveform;
+      var osc2_waveform;
+
+      var osc1_octave;
+      var osc2_octave;
+      
+      var osc1_amplitude;
+      var osc2_amplitude;
+
+      var osc1_semi = 0;
+      var osc2_semi = 0;
+
+      var osc1_cent = 0;
+      var osc2_cent = 0;
+
+      var osc1_frequency;
+      var osc2_frequency;
+
+      var changeOsc1 = function() {
+        osc1_waveform = parseInt($("#osc1_waveform").val());
+        osc1_octave   = parseInt($("#osc1_octave").val());
+        osc1_semi     = parseInt($("#osc1_semi").val());
+      };
+
+      var changeOsc2 = function() {
+        osc2_waveform = parseInt($("#osc2_waveform").val());
+        osc2_octave   = parseInt($("#osc2_octave").val());
+        osc2_semi     = parseInt($("#osc2_semi").val());
+      };
+      
+      var bpm = 60; // Beats per minute
+      
+      var sequencerStep = 0; // Sequencer step postion
+      
+      var sequencerTicksPerMillisecond = bpm * 8 / 60000; // Sequencer Ticks each millisecond. A Tick is a partial step.
+      
+      var polyphony = 8; // Number of oscillators that can be played at the same time
+      var oscPool = new Array(); // Pool of active oscillators
+
+      var sequencer = new Array(32);
+      for ( var i = 0; i < sequencer.length; i++ ) {
+        sequencer[i] = new Array(24);
+        for( var j = 0; j < sequencer[i].length; j++ ) {
+          sequencer[i][j] = false;
+        }
+      }
+
+      var sequencerNoteOn = new Array(32);
+      for ( var i = 0; i < sequencerNoteOn.length; i++ ) {
+        sequencerNoteOn[i] = new Array(24);
+        for( var j = 0; j < sequencerNoteOn[i].length; j++) {
+          sequencerNoteOn[i][j] = false;
+        }
+      }
+      
+      var curveOver = 0;
+      var curveCutoff = new Array(17);
+      var curveRes = new Array(17);
+      for ( var i = 0; i < 17; i++ ) {
+        curveCutoff[i] = sampleRate / 4;
+        curveRes[i] = 0.1;
+      } 
+
+      var oct = 3; // Root Octave
+
+      // Borrowed from F1LTER's code
+      var midiNoteFreq =  /* 0 */ [ 16.35,    17.32,    18.35,    19.45,    20.6,     21.83,    23.12,    24.5,     25.96,    27.5,  29.14,    30.87,
+                          /* 1 */   32.7,     34.65,    36.71,    38.89,    41.2,     43.65,    46.25,    49,       51.91,    55,    58.27,    61.74,
+                          /* 2 */   65.41,    69.3,     73.42,    77.78,    82.41,    87.31,    92.5,     98,       103.83,   110,   116.54,   123.47,
+                          /* 3 */   130.81,   138.59,   146.83,   155.56,   164.81,   174.61,   185,      196,      207.65,   220,   233.08,   246.94,
+                          /* 4 */   261.63,   277.18,   293.66,   311.13,   329.63,   349.23,   369.99,   392,      415.3,    440,   466.16,   493.88,
+                          /* 5 */   523.25,   554.37,   587.33,   622.25,   659.26,   698.46,   739.99,   783.99,   830.61,   880,   932.33,   987.77,
+                          /* 6 */   1046.5,   1108.73,  1174.66,  1244.51,  1318.51,  1396.91,  1479.98,  1567.98,  1661.22,  1760,  1864.66,  1975.53,
+                          /* 7 */   2093,     2217.46,  2349.32,  2489.02,  2637.02,  2793.83,  2959.96,  3135.96,  3322.44,  3520,  3729.31,  3951.07,
+                          /* 8 */   4186.01,  4434.92,  4698.64,  4978 ];
+
+
+
+      var writeCount = 0;
+
+      var timeStamp = (new Date()).getTime();  
+      
+      var silence = new Float32Array(bufferSize);
+
+      // Setup audio channel
+      var a = new Audio();
+      if ( typeof a.mozSetup == 'function' ) {
+        a.mozSetup(1, sampleRate);
+      }
+      
+      var timePerWrite = 0;
+      var programStart;
+      
+      var audioWriter = function() {
+        var startTime = (new Date()).getTime();        
+        var currentTime = (new Date()).getTime();
+        var mergedOsc; // undefined
+        var filterOn = $('#filter_toggle').attr('checked');
+        
+        if ( programStart === undefined ) {
+           programStart = new Date();
+        }
+        
+        // keep same pace as a real time
+        //while ( (new Date() - programStart) / 1000 * sampleRate / bufferSize >= writeCount ) {
+          for ( var i = 0; i < oscPool.length; i++ ) {
+            // Generate new frame of the signal
+            if ( oscPool[i].envelope.isActive() ) {
+              oscPool[i].osc1.generate(); // This generates a new frameBuffer of signal and applies the envelope as it goes.
+              oscPool[i].osc2.generate(); 
+              
+              // combine osc1 and osc2
+              oscPool[i].osc1.addSignal(oscPool[i].osc2.signal);
+              
+              // apply the filter
+              if ( filterOn ) {
+                filter.addEnvelope(oscPool[i].filterEnvelope);
+                filter.process(oscPool[i].osc1.signal);
+              }
+              
+              // apply the envelope
+              oscPool[i].envelope.process(oscPool[i].osc1.signal);
+              
+              // Merge down oscPool
+              if ( typeof mergedOsc === 'undefined' ) {
+                mergedOsc = oscPool[i].osc1;
+              } else {
+                mergedOsc.addSignal(oscPool[i].osc1.signal);
+              }
+            } else {
+              oscPool[i] = null; // Mark for deletion
+            }
+          }
+          
+          // Delete marked oscillators from the pool
+          var tmpPool = new Array();
+          for ( var i = 0; i < oscPool.length; i++ ) {
+            if ( oscPool[i] != null ) {
+              tmpPool.push(oscPool[i]);
+            }
+          }
+          oscPool = tmpPool;
+          
+          // Set the global osc object
+          if ( typeof mergedOsc !== 'undefined' ) {
+            osc = mergedOsc;
+          } else {
+            osc.signal = silence;
+            //osc.signal = undefined;
+          }
+
+          // Flush buffer  
+          a.mozWriteAudio([]);
+          
+            // Write next audio frame
+            a.mozWriteAudio(osc.signal);
+
+          writeCount++;
+
+          sequencerStep += (currentTime - timeStamp) * sequencerTicksPerMillisecond;
+        //}        
+
+        timeStamp = (new Date()).getTime();
+        var endTime = (new Date()).getTime();
+        
+        timePerWrite = endTime - startTime;
+      }
+    </script>
+      
+    <script target="#signal" type="application/processing">
+      float scale = 90.0;
+
+      void setup() {
+        size(512, 200);
+        
+        // setup oscillator to hold the merged signal of osc1 and osc2
+        osc = new Oscillator(osc1_waveform, 440, 0, bufferSize, sampleRate);
+        
+        setInterval(audioWriter, bufferTime); // start audioWriter timer        
+        frameRate(10);
+      }
+
+      void draw() {
+        var startTime = (new Date()).getTime();
+        
+        int sequencerCol = Math.floor(sequencerStep) % 32;
+        background(0, 0, 30);
+        
+        var curCol = Math.floor(sequencerCol/2);
+        var nextCol = (curCol + 1) % 17;
+        var alpha = ((sequencerStep % 32) / 2) - curCol; // should be a value between 0 and 0.99
+        
+        if ( $("#curve_cutoff_toggle").attr("checked") ) {
+          // interpolate value
+          var curveVal = curveCutoff[curCol] + (curveCutoff[nextCol] - curveCutoff[curCol]) * alpha;
+          
+          $('#cutoff').slider('option', 'value', curveVal);
+          changeFilter();
+        }
+        
+        if ( $("#curve_res_toggle").attr("checked") ) {
+          var curveVal = curveRes[curCol] + (curveRes[nextCol] - curveRes[curCol]) * alpha;
+          
+          $('#res').slider('option', 'value', curveVal);
+          changeFilter();
+        }
+        
+        // Check sequencer column for notes to trigger
+        for ( int i = 0; i < 24; i ++ ) {  
+          if ( sequencer[sequencerCol][i] == true && !sequencerNoteOn[sequencerCol][i] ) {
+            sequencerNoteOn[sequencerCol][i] = true;
+            
+            frequency = midiNoteFreq[12*oct+(24-i)];
+            
+            osc1_frequency = midiNoteFreq[12 * osc1_octave + (24 - i) + osc1_semi] + osc1_cent;
+            osc2_frequency = midiNoteFreq[12 * osc2_octave + (24 - i) + osc2_semi] + osc2_cent;
+            
+            // Add oscillator to the pool
+            var index = oscPool.length;
+            
+            var osc1 = new Oscillator(osc1_waveform, osc1_frequency, osc1_amplitude, bufferSize, sampleRate);
+            var osc2 = new Oscillator(osc2_waveform, osc2_frequency, osc2_amplitude, bufferSize, sampleRate);
+            var adsr = new ADSR($('#A').slider('option', 'value'), $('#D').slider('option', 'value'), $('#S').slider('option', 'value'), bufferTime / 1000, $('#R').slider('option', 'value'), sampleRate);              
+            var fadsr = new ADSR($('#FA').slider('option', 'value'), $('#FD').slider('option', 'value'), $('#FS').slider('option', 'value'), bufferTime / 1000, $('#FR').slider('option', 'value'), sampleRate);
+            
+            oscPool[index] = {};
+            oscPool[index].osc1 = osc1;
+            oscPool[index].osc2 = osc2;
+            oscPool[index].envelope = adsr;
+            oscPool[index].filterEnvelope = fadsr;
+          }
+          
+          if ( sequencer[sequencerCol][i] == false && sequencerCol > 0 ) {
+            sequencerNoteOn[sequencerCol-1][i] = false;
+          } else if ( sequencer[sequencerCol][i] == false && sequencerCol == 0 ) {
+            sequencerNoteOn[sequencerNoteOn.length -1][i] = false;
+          }
+        }
+
+        if ( SHOW_SEQUENCER ) {
+          /*
+           *  Sequencer View
+           *
+           *  Show step sequencer
+           *
+           */
+          stroke(200, 255, 255, 20); 
+          // Render horozontal lines
+          for (int i = 0; i < 24; i++ ) {
+            line(0, i * (height/24), width, i * (height/24));
+          }
+          
+          // Render vertical lines
+          for (int i = 0; i < 32; i++ ) {
+            if ( i % 8 == 0 ) {
+              strokeWeight(2);
+              stroke(200, 255, 255, 60);
+            } else {
+              stroke(200, 255, 255, 20);
+              strokeWeight(1);
+            }
+            line(i * (width/32), 0, i * (width/32), height);
+            
+            // Render sequencer step position
+            if ( i == Math.floor(sequencerStep % 32) ) {
+              noStroke();
+              stroke(200, 255, 255, 60);
+              //rect(i * (width/32), 0, width/32, height);
+              //stroke(255, 0, 0);
+              line((sequencerStep % 32) * (width/32), 0, (sequencerStep % 32) * (width/32), height);
+            }
+          }
+
+
+          noStroke();
+          for (int c = 0; c < sequencer.length; c++ ) {
+            for (int r = 0; r < sequencer[c].length; r++ ) {
+              if ( sequencer[c][r] == true ) {
+                if ( CURVE_EDITOR ) {
+                  fill(200, 255, 255, 40);
+                } else {
+                  fill(200, 255, 255, 100);
+                }
+                if ( c == Math.floor(sequencerStep % 32) ) {
+                  rect( (c - 1) * (width/32), (r -1) * (height/24), width/32 * 3, height/24 * 3);
+                }
+                rect(c * (width/32), r * (height/24), width/32, height/24);
+              }
+            }
+          }
+          
+          if ( CURVE_EDITOR ) {
+            strokeWeight(2);
+            
+            var cutoffScale = 50;
+            var resScale = 100;
+            
+            for ( int i = 0; i < 17; i++ ) {
+              fill(0, 0, 30);
+              
+              
+              // Cut off curve
+              if ( $("#curve_cutoff_toggle").attr("checked") ) {
+                stroke(200, 255, 255, 100);
+              } else {
+                stroke(200, 255, 255, 40);
+              }
+              
+              var xPos = i * (width/16);
+              var yPos = height/2 - curveCutoff[i] / cutoffScale;
+              
+              if (i < 16 ) {
+                var xPosNext = (i+1) * (width/16);
+                var yPosNext = height/2 - curveCutoff[i+1] / cutoffScale;
+                
+                line(xPos, yPos, xPosNext, yPosNext);
+              }
+              
+              if ( mouseX > xPos - 7 && mouseX < xPos + 7 && mouseY > yPos -7 && mouseY < yPos + 7 ) { 
+                ellipse(xPos, yPos, 7, 7);
+                curveOver = i;
+              } else {
+                ellipse(xPos, yPos, 5, 5);
+              }
+              
+              
+              // Resonance Curve
+              if ( $("#curve_res_toggle").attr("checked") ) {
+                stroke(200, 255, 255, 100);
+              } else {
+                stroke(200, 255, 255, 40);
+              }
+              
+              var xPos = i * (width/16);
+              var yPos = height - curveRes[i] * resScale;
+              
+              if (i < 16 ) {
+                var xPosNext = (i+1) * (width/16);
+                var yPosNext = height - curveRes[i+1] * resScale;
+                
+                line(xPos, yPos, xPosNext, yPosNext);
+              }
+              
+              if ( mouseX > xPos - 7 && mouseX < xPos + 7 && mouseY > yPos -7 && mouseY < yPos + 7 ) { 
+                ellipse(xPos, yPos, 7, 7);
+                curveOver = i;
+              } else {
+                ellipse(xPos, yPos, 5, 5);
+              }
+              
+              // draw center line
+              stroke(200, 255, 255, 60);
+              line(0, height/2, width, height/2);
+            
+              
+            }
+            strokeWeight(1);
+            
+            if ( DRAGGING ) {
+              if ( mouseY < height / 2 ) {
+                curveCutoff[curveOver] = (height/2 - mouseY) * cutoffScale;
+              } else if ( mouseY > height / 2 ) {
+                curveRes[curveOver] = (height - mouseY) / resScale;
+              }
+            }
+          }
+          
+        } else {
+          /*
+           *  Signal View
+           *
+           *  Show signal output
+           *
+           */
+          strokeWeight(1.5);
+          stroke(155, 200, 220);
+          for ( int i = 0; i < width/4 - 1; i++ ) {   
+            line(4*i, scale + 10 - osc.signal[4*i] * scale, 4*(i+1), scale + 10 - osc.signal[4*(i+1)] * scale);
+          }
+        }
+
+        var endTime = (new Date()).getTime();
+        
+        if ( $('#debug_toggle').attr('checked') ) {
+          $('#debug').html(    
+            "Time/frame (milliseconds): " + ( endTime - startTime ) + "<br>" +
+            "Time/write (milliseconds): " + ( timePerWrite ) + "<br>" +
+            "Audio frame size: " + bufferSize + "<br>" +
+            "Audio frames written: " + writeCount + "<br>" +
+            "Time (seconds): " + ((writeCount * bufferSize) / sampleRate) + "<br>" +
+            "Sequencer BPM: " + bpm + "<br>" +
+            "Sequencer steps/second: " + sequencerTicksPerMillisecond * 1000 + "<br>" +
+            "Active oscillators (polyphony): " + oscPool.length + "<br>" +
+            "Frame rate: " + frameRate.toFixed(1)
+          );
+        }
+      }
+      
+      boolean DRAGGING = false;
+      
+      void mousePressed() {
+        if ( SHOW_SEQUENCER && CURVE_EDITOR ) {
+          DRAGGING = true;
+        }
+      }
+
+      void mouseReleased() {
+        if ( SHOW_SEQUENCER && !CURVE_EDITOR ) {
+          // Plot notes in sequencer
+          var col = parseInt(mouseX / (width/32));
+          var row = parseInt(mouseY / (height/24));
+          sequencer[col][row] = !sequencer[col][row];
+        } else if ( SHOW_SEQUENCER && CURVE_EDITOR && DRAGGING ) {
+          DRAGGING = false;
+        }
+      }
+
+      void keyPressed() {
+        if ( key == 's' ) {
+          SHOW_SEQUENCER = !SHOW_SEQUENCER;
+        }
+        if ( key == 'c' ) {
+          CURVE_EDITOR = !CURVE_EDITOR;
+        }
+      }
+    </script>
+    
+    <h1>Sequencer</h1>
+    <p>Sequencer controlled oscillator with envelope and filter.</p>
+
+    <p><b>Click in the sequencer grid to plot notes. Switch to the signal view and adjust the envelope and filter to see the resulting waveforms.</b></p>
+    <p>Keyboard Commands:</p>
+    
+    <ul>
+      <li><b>S</b> - toggle between sequencer/signal view</li>
+      <li><b>C</b> - toggle curve editor</li>
+      <li><b>W</b> - change waveform</li>
+    </ul>
+    
+
+    <div style="float:left;margin-right: 5px;"><canvas id="signal" width="200px" height="200px"></canvas></div>
+    <div class="control">
+      <h3><input type="checkbox" id="debug_toggle" /> Debug</h3>
+      <div id="debug"></div>
+    </div>
+    <div style="clear:both;"></div>
+
+    <div class="control">
+      <h3>Oscillators</h3>
+      <table>
+        <tr>
+          <td style="width: 40px;"><h3>Osc 1</h3></td>
+          <td style="width: 100px;">
+            <select id="osc1_waveform">
+              <option value="1">Sine</option>
+              <option value="2">Triangle</option>
+              <option value="3">Saw</option>
+              <option value="4" selected="selected">Square</option>
+            </select>
+          </td>
+          <td style="width: 80px;">
+            Oct <select id="osc1_octave">
+              <option value="8">8</option>
+              <option value="7">7</option>
+              <option value="6">6</option>
+              <option value="5">5</option>
+              <option value="4" selected="selected">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+              <option value="0">0</option>
+            </select>
+          </td>
+          <td style="width: 80px;">
+            Semi <select id="osc1_semi">
+              <option value="12">12</option>
+              <option value="11">11</option>
+              <option value="10">10</option>
+              <option value="9">9</option>
+              <option value="8">8</option>
+              <option value="7">7</option>
+              <option value="6">6</option>
+              <option value="5">5</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+              <option value="0" selected="selected">0</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><h3>Osc 2</h3></td>
+          <td>
+            <select id="osc2_waveform">
+              <option value="1">Sine</option>
+              <option value="2">Triangle</option>
+              <option value="3">Saw</option>
+              <option value="4">Square</option>
+            </select>
+          </td>
+          <td>
+            Oct <select id="osc2_octave">
+              <option value="8">8</option>
+              <option value="7">7</option>
+              <option value="6">6</option>
+              <option value="5">5</option>
+              <option value="4" selected="selected">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+              <option value="0">0</option>
+            </select>
+          </td>
+          <td style="width: 100px;">
+            Semi <select id="osc2_semi">
+              <option value="12">12</option>
+              <option value="11">11</option>
+              <option value="10">10</option>
+              <option value="9">9</option>
+              <option value="8">8</option>
+              <option value="7">7</option>
+              <option value="6">6</option>
+              <option value="5">5</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+              <option value="0" selected="selected">0</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="control">
+      <h3>Mix</h3>
+      <table>
+        <tr>
+          <td><div id="osc_mix" class="slider" style="height: 70px;"></div></td>
+        </tr>
+      </table>
+    </div>
+    <div style="clear:both;"></div>
+
+    <div class="control">
+      <h3>Amp.</h3>
+      <table>
+        <tr>
+          <td><div id="amp" class="slider"></div><div id="ampLevel">70%</div></td>
+        </tr>
+      </table>
+    </div>
+    <div class="control">
+      <h3>Amp. Envelope</h3>
+      <table>
+        <tr>
+          <td><div id="A" class="slider"></div>A</td>
+          <td><div id="D" class="slider"></div>D</td>
+          <td><div id="S" class="slider"></div>S</td>
+          <td><div id="R" class="slider"></div>R</td>
+        </tr>
+      </table>
+    </div>
+    <div class="control">
+      <h3><input type="checkbox" id="filter_toggle" checked/> Filter</h3>
+      <table>
+        <tr>
+          <td><div id="cutoff" class="slider"></div>F</td>
+          <td><div id="res" class="slider"></div>Q</td>
+          <td style="width: 60px; vertical-align: top;">
+            <div id="filter_type">
+              <input type="radio" id="hp12" name="filter_type" value="1"/> <label for="hp12">HP12</label><br />
+              <input type="radio" id="br12" name="filter_type" value="3"/> <label for="bp12">BR12</label><br />
+              <input type="radio" id="bp12" name="filter_type" value="2"/> <label for="bp12">BP12</label><br />
+              <input type="radio" id="lp12" name="filter_type" value="0" checked="checked"/> <label for="lp12">LP12</label><br />
+            </div>
+            <div style="margin-top: 10px;">
+              <h3>Automate</h3>
+              <input type="checkbox" id="curve_cutoff_toggle" /> F<br/>
+              <input type="checkbox" id="curve_res_toggle" /> Q
+            </div>
+          </td>
+        </tr>
+        <tr>
+        </tr>
+      </table>
+    </div>
+    <div class="control">
+      <h3>Filter Envelope</h3>
+      <table>
+        <tr>
+          <td><div id="FA" class="slider"></div>A</td>
+          <td><div id="FD" class="slider"></div>D</td>
+          <td><div id="FS" class="slider"></div>S</td>
+          <td><div id="FR" class="slider"></div>R</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
