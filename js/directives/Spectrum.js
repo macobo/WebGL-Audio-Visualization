@@ -8,14 +8,10 @@ angular.module('audioVizApp')
       for (var i = 0; i < data.length; i++) {
         var h = Math.round(1.0 * data[i] / maxValue * height);
         var w = 1.0 * i * width / data.length;
-        if (i == data.length - 2) {
-          console.log(h, w);
-        }
         ctx.lineTo(w, height-h);
       }
       ctx.lineTo(width, height);
       ctx.fill();
-      console.log(height);
     };
 
     var linker = function(scope, element, attrs) {
