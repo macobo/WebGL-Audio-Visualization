@@ -37,16 +37,35 @@ body {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000329}}
 #sidebar {
   color: #eeeeee;
-  background-color: rgba(51, 51, 51, 0.9);
+  background-color: rgba(22, 22, 22, 0.99);
   position: absolute;
   width: 200px;
   min-height: 100%;
-  padding: 4px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000337}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000336}}
 #container {
   position: absolute;
   min-height: 100%;
   margin-left: 200px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000341}}
+spectrum {
+  display: block;
+  padding: 0px;
+  margin: 0px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000346}}
+spectrum canvas {
+  width: 100%;
+  background-color: #111111;
+  height: 150px;
+  margin: 0px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000352}}
+.bottom {
+  position: absolute;
+  bottom: -5px;
 }

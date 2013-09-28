@@ -10,6 +10,8 @@
 <body ng-controller="MainController">
 	<div id="sidebar">
 		<h1>Sidebar</h1>
+
+		<spectrum data="audio.spectrum()" class="bottom"></spectrum>
 	</div>
 	<!-- three.js container -->
   <div id="container"></div>
@@ -24,11 +26,13 @@
 
 	<script src="components/angular-unstable/angular.min.js"></script>
 	<script src="components/dsp.js/dsp.js"></script>
+	<script src="js/AudioStuff.js"></script>
 
 	<script src="js/app.js"></script>
-	<script src="js/MainController.js"></script>
-	<script src="js/AudioService.js"></script>
-	<script src="js/AudioStuff.js"></script>
+	<script src="js/services/AudioService.js"></script>
+	<script src="js/services/IntervalService.js"></script>
+	<script src="js/controllers/MainController.js"></script>
+	<script src="js/directives/Spectrum.js"></script>
 
 	<script src="vendor/three.js/Three.js"></script>
 	<script src="vendor/three.js/Detector.js"></script>
@@ -71,7 +75,8 @@
 			// add Stats.js - https://github.com/mrdoob/stats.js
 			stats = new Stats();
 			stats.domElement.style.position	= 'absolute';
-			stats.domElement.style.bottom	= '0px';
+			stats.domElement.style.top	= '0px';
+			stats.domElement.style.right	= '0px';
 			document.body.appendChild( stats.domElement );
 
 			// create a scene
