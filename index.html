@@ -8,11 +8,12 @@
 		<link  href="css/main.css" rel="stylesheet"/>
 	</head>
 <body ng-controller="MainController">
-	<div id="sidebar">
-		<h1>Sidebar</h1>
-
-		<spectrum data="audio.spectrum()" class="bottom"></spectrum>
+	<div id="sidebar" class="side-buttons-container">
+		<folder title="spectrum">
+			<spectrum data="audio.spectrum()"></spectrum>
+		</folder>
 	</div>
+	
 	<!-- three.js container -->
   <div id="container"></div>
 	<!-- info on screen display -->
@@ -20,7 +21,7 @@
 		<div class="bottom" id="inlineDoc" >
 			- <i>p</i> for screenshot
 		</div> 
-	</div> 
+	</div>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
@@ -33,6 +34,7 @@
 	<script src="js/services/IntervalService.js"></script>
 	<script src="js/controllers/MainController.js"></script>
 	<script src="js/directives/Spectrum.js"></script>
+	<script src="js/directives/folder.js"></script>
 
 	<script src="vendor/three.js/Three.js"></script>
 	<script src="vendor/three.js/Detector.js"></script>
@@ -76,7 +78,7 @@
 			stats = new Stats();
 			stats.domElement.style.position	= 'absolute';
 			stats.domElement.style.top	= '0px';
-			stats.domElement.style.right	= '0px';
+			stats.domElement.style.left	= '0px';
 			document.body.appendChild( stats.domElement );
 
 			// create a scene

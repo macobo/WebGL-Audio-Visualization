@@ -34,38 +34,79 @@ body {
   padding: 5px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000329}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000328}}
 #sidebar {
   color: #eeeeee;
-  background-color: rgba(22, 22, 22, 0.99);
   position: absolute;
-  width: 200px;
+  right: 0px;
+  width: 20%;
+  max-width: 300px;
+  min-width: 200px;
   min-height: 100%;
+  z-index: 5;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000336}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000338}}
+.side-buttons-container {
+  color: #eeeeee;
+  font: 13px "Lucida Grande", sans-serif;
+  text-shadow: 0 -1px 0 #111111;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000342}}
+.side-buttons-container .button {
+  border-left: 3px solid #2fa1d6;
+  background-color: #555555;
+  height: 27px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000346}}
+.side-buttons-container .button ul {
+  margin: 0px;
+  padding-left: 6px;
+  clear: both;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000351}}
+.side-buttons-container .button li {
+  list-style: none;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000354}}
+.folder {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000356}}
+.folder .title {
+  line-height: 27px;
+  padding-left: 16px;
+  background: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;
+  cursor: pointer;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000361}}
+.folder .title.open {
+  background: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000363}}
+.folder .content {
+  margin-top: 1px;
+  background-color: #555555;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000367}}
 #container {
   position: absolute;
   min-height: 100%;
-  margin-left: 200px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000341}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000371}}
 spectrum {
   display: block;
   padding: 0px;
   margin: 0px;
+  z-index: 5;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000346}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000377}}
 spectrum canvas {
   width: 100%;
   background-color: #111111;
   height: 150px;
   margin: 0px;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000352}}
-.bottom {
-  position: absolute;
-  bottom: -5px;
 }

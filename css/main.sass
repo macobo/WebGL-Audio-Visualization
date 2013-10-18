@@ -25,30 +25,57 @@ body
     right: 5px
     padding: 5px
 
-$SIDEBAR_WIDTH: 200px
 #sidebar
   color: #EEE
-  background-color: rgba(22, 22, 22, 0.99)
   position: absolute
-  width: $SIDEBAR_WIDTH
+  right: 0px
+  width: 20%
+  max-width: 300px
+  min-width: 200px
   min-height: 100%
+  z-index: 5
+
+.side-buttons-container
+  color: rgb(238, 238, 238)
+  font: 13px 'Lucida Grande', sans-serif
+  text-shadow: 0 -1px 0 rgb(17, 17, 17)
+  .button
+    border-left: 3px solid rgb(47, 161, 214)
+    background-color: #555
+    height: 27px
+    ul
+      margin: 0px
+      padding-left: 6px
+      clear: both
+
+    li
+      list-style: none
+
+.folder
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5)
+  .title
+    line-height: 27px
+    padding-left: 16px
+    background: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat
+    cursor: pointer
+  .title.open
+    background: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat
+  .content
+    margin-top: 1px
+    background-color: #555
 
 #container
   position: absolute
   min-height: 100%
-  margin-left: $SIDEBAR_WIDTH
 
 spectrum
   display: block
   padding: 0px
   margin: 0px
+  z-index: 5
 
   canvas
     width: 100%
     background-color: #111
     height: 150px
     margin: 0px
-
-.bottom
-  position: absolute
-  bottom: -5px
