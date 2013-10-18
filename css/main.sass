@@ -39,14 +39,12 @@ body
   color: rgb(238, 238, 238)
   font: 13px 'Lucida Grande', sans-serif
   text-shadow: 0 -1px 0 rgb(17, 17, 17)
-  .button
+  .button 
     border-left: 3px solid rgb(47, 161, 214)
     background-color: #555
-    height: 27px
     ul
       margin: 0px
       padding-left: 6px
-      clear: both
 
     li
       list-style: none
@@ -56,13 +54,16 @@ body
   .title
     line-height: 27px
     padding-left: 16px
-    background: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat
+    margin-left: 4px  
+    border-left: 4px solid rgba(0, 0, 0, 0)
+    background:  url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlGIWqMCbWAEAOw==) 6px 10px no-repeat
     cursor: pointer
   .title.open
     background: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat
   .content
     margin-top: 1px
     background-color: #555
+    margin-left: -6px
 
 #container
   position: absolute
@@ -73,9 +74,16 @@ spectrum
   padding: 0px
   margin: 0px
   z-index: 5
+  height: 150px
 
   canvas
     width: 100%
     background-color: #111
-    height: 150px
+    height: 100%
     margin: 0px
+
+@mixin transition($rule)
+  -webkit-transition: $rule
+  -moz-transition: $rule
+  -o-transition: $rule
+  transition: $rule
