@@ -3,7 +3,6 @@ angular.module('audioVizApp')
     var linker = function(scope, element, attrs) {
       scope.title = attrs.title;
       scope.open = false;
-      console.log(attrs);
     };
 
     return {

@@ -92,12 +92,13 @@ body {
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000368}}
-#container {
+#container, .container {
   position: absolute;
   min-height: 100%;
+  width: 100%;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000372}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000373}}
 spectrum {
   display: block;
   padding: 0px;
@@ -105,7 +106,7 @@ spectrum {
   z-index: 5;
   height: 150px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000379}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000380}}
 spectrum canvas {
   width: 100%;
   background-color: #111111;
