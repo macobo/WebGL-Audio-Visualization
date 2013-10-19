@@ -69,13 +69,10 @@
   	client_id: "cbeb4fe25866e35cb329fa4acc298531",
    });
    SC.stream("/tracks/293",  {
-   	useHTML5Audio: true, 
    	preferFlash: false, 
-   	html5Test: /^probably$/i,
    	useEQData: true
    }, function(sound){
     sound.play();
-    console.log(sound.isHTML5);
     window.sound = sound;
   });
  });
