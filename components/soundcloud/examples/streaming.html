@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <title>SoundCloud JavaScript SDK Examples</title>
+    <link href="http://importer.soundcloudlabs.com/stylesheets/labs.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="examples.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>    
+    <script src="examples.js"></script>
+  </head>
+  <body>
+<textarea class="exampleSource"><script src="//connect.soundcloud.com/sdk.js"></script>
+<script>
+  SC.initialize({
+    client_id: "YOUR_CLIENT_ID"
+  });
+  
+  $("#stream").live("click", function(){
+    SC.stream("/tracks/293", {autoPlay: true});
+  });
+</script>
+
+<input type="button" href="#" id="stream" class="big button" value="Stream It Again, Sam" />
+</textarea>
+    <div id="page">
+      <div id="header">
+        <a href="/"><h1>SoundCloud JavaScript SDK Examples</h1></a>
+      </div>
+      <div class="content">
+        <div class="tab-ui">
+          <ul class="tabs">
+            <li class="first"><a href="basic.html">Basic</a></li>
+            <li class="first"><a href="connecting.html">Connecting</a></li>
+            <li class="first current"><a href="streaming.html">Streaming</a></li>
+            <li class="first"><a href="recording.html">Recording</a></li>
+          </ul>
+        </div>
+
+        <div id="left">
+          <p>The <b>SoundCloud JavaScript SDK</b> provides essential tools that let you easiliy integrate SoundCloud features like <b>player embedding</b>, <b>audio streaming</b>, <b>audio recording</b> and other actions like <b>following, favoriting and commenting</b> into your website.
+            For more infos have a look at the <a href="http://developers.soundcloud.com/docs/javascript-sdk">docs</a>.</p>
+            
+          <p>This example demonstrates how to stream a track from SoundCloud. </p>
+          <div class="example">
+          </div>
+        </div>
+        <div id="right"><pre><code></code></pre></div>
+      </div>
+    </div>
+  </body>
+</html>

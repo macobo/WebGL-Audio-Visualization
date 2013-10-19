@@ -31,8 +31,8 @@ Audio.prototype.play = function(callback) {
   var audio = this;
   this.source.load(function() {
     audio.connect();
-    source.play();
-    audio.playing = true;
+    //source.play();
+    //audio.playing = true;
     if (callback) callback();
   });
 };

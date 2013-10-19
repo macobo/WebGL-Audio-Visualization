@@ -12,6 +12,12 @@
 		<folder title="spectrum">
 			<spectrum data="audio.spectrum()"></spectrum>
 		</folder>
+		<folder title="raw">
+			<spectrum data="audio.mono()"></spectrum>
+		</folder>
+		<folder title="eqdata">
+			<spectrum data="eqData()"></spectrum>
+		</folder>
 	</div>
 	
 	<!-- three.js container -->
@@ -23,7 +29,8 @@
 		</div> 
 	</div>
 
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="components/jquery/jquery.min.js"></script>
+	<script src="components/underscore/underscore-min.js"></script>
 
 	<script src="components/angular-unstable/angular.min.js"></script>
 	<script src="components/dsp.js/dsp.js"></script>
@@ -54,5 +61,24 @@
 	<script src="vendor/three.js/postprocessing/BloomPass.js"></script>
 	<script src="vendor/three.js/postprocessing/ShaderPass.js"></script>
 	<script src="vendor/three.js/postprocessing/MaskPass.js"></script>
+
+ <script src="//connect.soundcloud.com/sdk.js"></script> 
+ <script>
+ $(document).ready(function() {
+   SC.initialize({
+  	client_id: "cbeb4fe25866e35cb329fa4acc298531",
+   });
+   SC.stream("/tracks/293",  {
+   	useHTML5Audio: true, 
+   	preferFlash: false, 
+   	html5Test: /^probably$/i,
+   	useEQData: true
+   }, function(sound){
+    sound.play();
+    console.log(sound.isHTML5);
+    window.sound = sound;
+  });
+ });
+ </script>
 </body>
 </html>

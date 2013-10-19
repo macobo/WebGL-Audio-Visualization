@@ -16,12 +16,15 @@ angular.module('audioVizApp')
 
     var linker = function(scope, element, attrs) {
       var delay = parseFloat(attrs.delay) || 200;
+      var maxValue = 0;
       var canvas = element.find('canvas');
       var ctx = canvas[0].getContext('2d');
 
       $interval(function() {
         //console.log(scope.data(), canvas);
-        draw(ctx, scope.data(), 500, canvas.width(), canvas.height());
+        var data = scope.data();
+        maxValue = _.max([maxValue, _.max(data)]);
+        draw(ctx, scope.data(), maxValue, canvas.width(), canvas.height());
       }, delay);
     };
 
