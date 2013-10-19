@@ -24,7 +24,14 @@ angular.module('audioVizApp')
       "audio": audio,
       "model": model,
       "spectrum": function() {
-        return model.data;
+		if (window.sound) {
+
+			return _.map(sound.eqData, function(el) { return parseFloat(el, 10); });
+		} else {
+		
+			return [];
+		}
+        //return model.data;
       },
       "mono": function() {
         return audio.mono;
