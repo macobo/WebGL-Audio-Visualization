@@ -12,11 +12,9 @@
 		<folder title="spectrum">
 			<spectrum data="audio.spectrum()"></spectrum>
 		</folder>
-		<folder title="raw">
-			<spectrum data="audio.mono()"></spectrum>
-		</folder>
-		<folder title="eqdata">
-			<spectrum data="eqData()"></spectrum>
+		<folder title="playlist" >
+			<div ng-controller="PlaylistController">
+			</div>
 		</folder>
 	</div>
 	
@@ -38,8 +36,10 @@
 
 	<script src="js/app.js"></script>
 	<script src="js/services/AudioService.js"></script>
+	<script src="js/services/PlaylistService.js"></script>
 	<script src="js/services/IntervalService.js"></script>
 	<script src="js/controllers/MainController.js"></script>
+	<script src="js/controllers/PlaylistController.js"></script>
 	<script src="js/controllers/FirstViz.js"></script>
 	<script src="js/directives/Spectrum.js"></script>
 	<script src="js/directives/folder.js"></script>
@@ -63,19 +63,5 @@
 	<script src="vendor/three.js/postprocessing/MaskPass.js"></script>
 
  <script src="//connect.soundcloud.com/sdk.js"></script> 
- <script>
- $(document).ready(function() {
-   SC.initialize({
-  	client_id: "cbeb4fe25866e35cb329fa4acc298531",
-   });
-   SC.stream("/tracks/293",  {
-   	preferFlash: false, 
-   	useEQData: true
-   }, function(sound){
-    sound.play();
-    window.sound = sound;
-  });
- });
- </script>
 </body>
 </html>
