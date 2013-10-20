@@ -17,12 +17,17 @@ angular.module('audioVizApp')
       return deferred.promise;
     };
 
-    var play_song = function(track_index) {
+    var play_song = function(track_index, options) {
       var deferred = $q.defer();
       var id = playlist.tracks[track_index].id;
-      SC.stream("/tracks/"+id, { useEQData: true }, function(_sound) {
+
+      options = options || {};
+      options.autoPlay = true;
+      options.useEQData = true;
+
+      SC.stream("/tracks/"+id, options, function(_sound) {
         sound = _sound;
-        sound.play();
+        //sound.play();
         deferred.resolve(sound);
       });
       return deferred.promise;
@@ -39,7 +44,7 @@ angular.module('audioVizApp')
       tracks: function() { return playlist.tracks; },
       play: play_song,
       stop: stop_current,
-      sound: function() { return sound; }
+      sound: function() { return sound; },
     };
 
     return service;
