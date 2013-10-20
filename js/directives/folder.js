@@ -2,7 +2,7 @@ angular.module('audioVizApp')
   .directive('folder', function () {
     var linker = function(scope, element, attrs) {
       scope.title = attrs.title;
-      scope.open = false;
+      scope.open = _.has(attrs, "open");
     };
 
     return {
