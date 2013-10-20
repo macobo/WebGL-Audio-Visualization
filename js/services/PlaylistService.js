@@ -29,7 +29,7 @@ angular.module('audioVizApp')
     };
 
     var stop_current = function() {
-      sound.stop();
+      if (sound) sound.stop();
       sound = null;
     };
 

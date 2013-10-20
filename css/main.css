@@ -89,16 +89,17 @@ body {
   margin-top: 1px;
   background-color: #555555;
   margin-left: -6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000368}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000369}}
 #container, .container {
   position: absolute;
   min-height: 100%;
   width: 100%;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000373}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000374}}
 spectrum {
   display: block;
   padding: 0px;
@@ -106,10 +107,25 @@ spectrum {
   z-index: 5;
   height: 150px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000380}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000381}}
 spectrum canvas {
   width: 100%;
   background-color: #111111;
   height: 100%;
   margin: 0px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000395}}
+.playlist {
+  padding: 5px 5px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000397}}
+.playlist li {
+  cursor: pointer;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\0000399}}
+.playlist .active {
+  text-shadow: 0 0 0;
+  color: red;
+  font-weight: bold;
 }

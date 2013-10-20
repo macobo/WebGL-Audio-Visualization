@@ -9,11 +9,19 @@
 	</head>
 <body ng-controller="MainController">
 	<div id="sidebar" class="side-buttons-container">
-		<folder title="spectrum" open>
+		<folder title="spectrum">
 			<spectrum data="audio.spectrum()"></spectrum>
 		</folder>
-		<folder title="playlist" >
-			<div ng-controller="PlaylistController">
+		<folder title="playlist" open>
+			<div ng-controller="PlaylistController" class="playlist">
+				<ul>
+					<li ng-repeat="track in tracks" 
+							ng-click="setTrack($index)"
+							ng-class="{active: track==current_track}" ng-cloak>
+						<span class="song-title">{{ $index+1 }}. {{ track.title }}</span>
+
+					</li>
+				</ul>
 			</div>
 		</folder>
 	</div>

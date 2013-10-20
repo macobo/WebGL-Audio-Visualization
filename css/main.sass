@@ -64,6 +64,7 @@ body
     margin-top: 1px
     background-color: #555
     margin-left: -6px
+    border-top: 1px solid rgba(255, 255, 255, 0.5)
 
 #container, .container
   position: absolute
@@ -88,3 +89,14 @@ spectrum
   -moz-transition: $rule
   -o-transition: $rule
   transition: $rule
+
+
+// playlists
+.playlist
+  padding: 5px 5px
+  li
+    cursor: pointer
+  .active
+    text-shadow: 0 0 0
+    color: red
+    font-weight: bold
