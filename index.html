@@ -12,6 +12,9 @@
 		<folder title="spectrum">
 			<spectrum data="audio.spectrum()"></spectrum>
 		</folder>
+		<folder title="logScale">
+			<spectrum data="bandValues()"></spectrum>
+		</folder>
 		<folder title="playlist" open>
 			<div ng-controller="PlaylistController" class="playlist">
 				<ul>
@@ -25,7 +28,7 @@
 			</div>
 		</folder>
 	</div>
-	
+	<div ng-show="isBeat">BEAT</div>
 	<!-- three.js container -->
   <div id="container" ng-view></div>
 	<!-- info on screen display -->
@@ -46,6 +49,7 @@
 	<script src="js/services/AudioService.js"></script>
 	<script src="js/services/PlaylistService.js"></script>
 	<script src="js/services/IntervalService.js"></script>
+	<script src="js/services/BeatDetector.js"></script>
 	<script src="js/controllers/MainController.js"></script>
 	<script src="js/controllers/PlaylistController.js"></script>
 	<script src="js/controllers/FirstViz.js"></script>

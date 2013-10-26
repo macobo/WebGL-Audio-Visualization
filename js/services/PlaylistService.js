@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('audioVizApp')
-  .service('PlaylistService', function ($q) {
+  .service('PlaylistService', function ($q, BeatDetector) {
 
     SC.initialize({
       client_id: "cbeb4fe25866e35cb329fa4acc298531",
@@ -24,9 +24,14 @@ angular.module('audioVizApp')
       options = options || {};
       options.autoPlay = true;
       options.useEQData = true;
+      options.usePeakData = true;
+      options.whileplaying = function() {
+        BeatDetector.update(sound.eqData);
+      };
 
       SC.stream("/tracks/"+id, options, function(_sound) {
         sound = _sound;
+        window.sound = sound;
         //sound.play();
         deferred.resolve(sound);
       });
