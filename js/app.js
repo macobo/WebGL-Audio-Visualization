@@ -7,6 +7,10 @@ angular.module('audioVizApp', [])
         template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
         controller: 'FirstViz'
       })
+	  .when('/2', {
+        template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
+        controller: 'HedgehogViz'
+      })
       .otherwise({
         redirectTo: '/'
       });
