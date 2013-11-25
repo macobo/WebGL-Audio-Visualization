@@ -21,7 +21,7 @@ angular.module('audioVizApp')
       // transparently support window resize
       THREEx.WindowResize.bind(renderer, camera);
 
-      var light = new THREE.AmbientLight( (Math.random()*0.5 + 0.3) * 0xffffff );
+      var light = new THREE.AmbientLight( (Math.random()*0.4 + 0.3) * 0xffffff );
       scene.add( light );
 
       var light5 = new THREE.PointLight( 0xff0000 );
@@ -30,7 +30,7 @@ angular.module('audioVizApp')
 
       var geometry  = new THREE.SphereGeometry(1, widthSegCount, heightSegCount);
       geometry.dynamic = true;
-      var material  = new THREE.MeshLambertMaterial({ambient: 0x808080, color: Math.max(Math.random()+0.3, 1.0) * 0xffffff});
+      var material  = new THREE.MeshLambertMaterial({ambient: 0x808080, color: Math.max(Math.random()*0.2+0.2, 1.0) * 0xffffff});
       var mesh  = new THREE.Mesh( geometry, material );
       mesh.dynamic = true;
       mesh.scale.x = 0.2;
