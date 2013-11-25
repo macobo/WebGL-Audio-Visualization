@@ -99,7 +99,7 @@ angular.module('audioVizApp')
           //var initialPosition = new THREE.Vector3();
           //initialPosition.addSelf();
           sphere.geometry.vertices[i].initialPosition = sphere.geometry.vertices[i].position.clone(); //initialPosition;
-          console.log("Extra vertices: " + Math.abs((widthSegCount * heightSegCount) - sphere.geometry.vertices.length));
+          //console.log("Extra vertices: " + Math.abs((widthSegCount * heightSegCount) - sphere.geometry.vertices.length));
           if (
             previousVertex != undefined &&   
             sphere.geometry.vertices[i].position.x == previousVertex.position.x && 
