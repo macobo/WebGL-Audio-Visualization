@@ -13,6 +13,8 @@
   ],
   "devDependencies": {
     "angular-unstable": "~1.1.5",
-    "dsp.js": "*"
+    "dsp.js": "*",
+    "threejs": "*",
+    "threex": "*"
   }
 }

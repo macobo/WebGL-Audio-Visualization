@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>three.js webgl - geometry - cube</title>
+	<meta charset="utf-8">
+	<style>
+		body {
+			margin: 0px;
+			background-color: #000000;
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+<script src="../vendor/three.js/build/three.min.js"></script>
+<script src="../vendor/require.js/require.js"></script>
+<script>
+require([ '../local_modules/threex.context/package.require',
+	, '../local_modules/threex.windowresize/package.require'
+	, '../local_modules/threex.creators/package.require'
+], function(){
+	var ctx		= new THREEx.Context().start()
+	THREEx.WindowResize(ctx.renderer, ctx.camera)
+
+	var mesh1	= THREEx.createTorusMesh()
+	mesh1.position.set(1,0,0)
+	ctx.add(mesh1)
+
+	var mesh	= THREEx.createCubeMesh();
+	ctx.add( mesh );
+
+	ctx.hook(function(delta, now){
+		mesh.rotation.x += 0.1 * delta*Math.PI*2;
+		mesh.rotation.y += 0.2 * delta*Math.PI*2;
+	})
+})
+</script></body>
+</html>

@@ -2,7 +2,7 @@
 
 angular.module('audioVizApp')
   .controller('FirstViz', function($scope, AudioService) {
-    var scene, camera, cameraControls, composer;
+    var scene, camera, cameraControls, composer, mesh;
 
     $scope.scene_init = function(renderer, width, height) {
       scene = new THREE.Scene();
@@ -38,13 +38,16 @@ angular.module('audioVizApp')
 
       var geometry  = new THREE.TorusGeometry( 1, 0.42, 16, 16 );
       var material  = new THREE.MeshLambertMaterial({ambient: 0x808080, color: Math.random() * 0xffffff});
-      var mesh  = new THREE.Mesh( geometry, material );
+      mesh  = new THREE.Mesh( geometry, material );
+      window.mesh = mesh;
       scene.add( mesh );
+      console.log(mesh, [mesh.scale.x, mesh.scale.y])
+      mesh.scaleSpeedX = mesh.scaleSpeedY = 0;
     
-    for (var i = 0; i < scene.objects.length; i++) {
+/*    for (var i = 0; i < scene.objects.length; i++) {
+    geometry.scaleSpeedX = 0;
     scene.objects[i].scaleSpeedX = 0;
-    scene.objects[i].scaleSpeedX = 0;
-    }
+    }*/
 
       // define the stack of passes for postProcessing
       composer = new THREE.EffectComposer( renderer );
@@ -86,31 +89,34 @@ angular.module('audioVizApp')
       var scaleY = 1.0 + 5.0 * avg(highSpectrum) / (_.max(highSpectrum)+0.1);
 
       // animation of all objects
-      for( var i = 0; i < scene.objects.length; i ++ ){
-        if (lowSpectrum.length == 0 || highSpectrum.length == 0) {
+      //for( var i = 0; i < scene.objects.length; i ++ ){
+        // if (lowSpectrum.length == 0 || highSpectrum.length == 0) {
 
-          continue;
-        }
-        scene.objects[i].scaleSpeedX = scene.objects[i].scale.x - scaleX;
-        scene.objects[i].scaleSpeedY = scene.objects[i].scale.y - scaleY;
+        //   continue;
+        // }
+
+        //mesh.scaleSpeedX = mesh.scale.x - scaleX;
+        //mesh.scaleSpeedY = mesh.scale.y - scaleY;
 
         //console.log(_.max(lowSpectrum) / (1.0 * sum(lowSpectrum) / lowSpectrum.length) / 100, _.max(lowSpectrum), sum(lowSpectrum), lowSpectrum.length);
         //console.log(_.max(highSpectrum) / (1.0 * sum(highSpectrum) / highSpectrum.length) / 100, _.max(highSpectrum), sum(highSpectrum), highSpectrum.length);
         //console.log(scale);
-        scene.objects[i].scale.x += (scaleX - scene.objects[i].scale.x) / 20.0;
-        scene.objects[i].scale.y += (scaleY - scene.objects[i].scale.y) / 20.0;
+        if (scaleX && scaleY) {
+          mesh.scale.x += (scaleX - mesh.scale.x) / 20.0;
+          mesh.scale.y += (scaleY - mesh.scale.y) / 20.0;
+        }
     
         //scene.objects[ i ].rotation.y = PIseconds*0.0003 * (i % 2 ? 1 : -1);
         //scene.objects[ i ].rotation.x = PIseconds*0.0002 * (i % 2 ? 1 : -1);
-      }
+      //}
       // animate DirectionalLight
-      scene.lights.forEach(function(light, idx){
+      _.each(scene.lights, function(light, idx){
         if( light instanceof THREE.DirectionalLight === false ) return;
         var ang = 0.0005 * PIseconds * (idx % 2 ? 1 : -1);
         light.position.set(Math.cos(ang), Math.sin(ang), Math.cos(ang*2)).normalize();
       });
       // animate PointLights
-      scene.lights.forEach(function(light, idx){
+      _.each(scene.lights,function(light, idx){
         if( light instanceof THREE.PointLight === false ) return;
         var angle = 0.0005 * PIseconds * (idx % 2 ? 1 : -1) + idx * Math.PI/3;
         light.position.set(Math.cos(angle)*3, Math.sin(angle*3)*2, Math.cos(angle*2)).normalize().multiplyScalar(2);

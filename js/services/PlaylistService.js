@@ -5,6 +5,7 @@ angular.module('audioVizApp')
 
     SC.initialize({
       client_id: "cbeb4fe25866e35cb329fa4acc298531",
+      debug: false
     });
     var playlist, sound;
     
