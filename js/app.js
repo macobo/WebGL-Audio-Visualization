@@ -5,11 +5,13 @@ angular.module('audioVizApp', [])
     $routeProvider
       .when('/', {
         template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
-        controller: 'FirstViz'
+        controller: 'FirstViz',
+        AnimName: 'Torus'
       })
-	  .when('/2', {
+	   .when('/2', {
         template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
-        controller: 'HedgehogViz'
+        controller: 'HedgehogViz',
+        AnimName: 'HedgeHog'
       })
       .otherwise({
         redirectTo: '/'

@@ -129,3 +129,21 @@ spectrum canvas {
   color: red;
   font-weight: bold;
 }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003105}}
+.links {
+  margin: 5px;
+  padding-left: 6px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003108}}
+.links a {
+  display: block;
+  color: white;
+  padding-bottom: 3px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003112}}
+.links a.active {
+  color: red;
+  text-decoration: underline;
+  font-weight: bold;
+}

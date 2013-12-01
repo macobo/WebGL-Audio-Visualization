@@ -2,7 +2,7 @@
 
 angular.module('audioVizApp')
   .controller('HedgehogViz', function($scope, AudioService) {
-    var scene, camera, cameraControls, composer;
+    var scene, camera, cameraControls, composer, sphere;
     var widthSegCount = 16;
     var heightSegCount = 18;
     var vertexCount = widthSegCount * heightSegCount;
@@ -36,15 +36,10 @@ angular.module('audioVizApp')
       mesh.scale.x = 0.2;
       mesh.scale.y = 0.2;
       mesh.scale.z = 0.2;
+
+      window.sphere = mesh;
       
       scene.add( mesh );
-	    console.log(scene);
-    
-    for (var i = 0; i < scene.objects.length; i++) {
-    scene.objects[i].scaleSpeedX = 0;
-    scene.objects[i].scaleSpeedX = 0;
-    }
-
       // define the stack of passes for postProcessing
       composer = new THREE.EffectComposer( renderer );
       renderer.autoClear = false;
@@ -86,7 +81,7 @@ angular.module('audioVizApp')
       var lowSpectrum = spectrum.slice(0, spectrumPivot);
       var highSpectrum = spectrum.slice(spectrumPivot, spectrum.length);
 
-      var sphere = scene.objects[0];
+      //var sphere = scene.objects[0];
       vertexCount = sphere.geometry.vertices.length;
 
 

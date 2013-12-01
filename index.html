@@ -9,10 +9,18 @@
 	</head>
 <body ng-controller="MainController">
 	<div id="sidebar" class="side-buttons-container">
-		<folder title="spectrum">
+		<folder title="Links" open>
+			<div class="links" ng-cloak>
+				<a ng-repeat="link in links" ng-href="#{{link.href}}" 
+					 ng-class="{active: isActive(link)}">
+					{{ link.AnimName }}
+				</a>
+			</div>
+		</folder>
+		<folder title="Spectrum">
 			<spectrum data="audio.spectrum()"></spectrum>
 		</folder>
-		<folder title="playlist" open>
+		<folder title="Playlist" open>
 			<div ng-controller="PlaylistController" class="playlist">
 				<ul>
 					<li ng-repeat="track in tracks" 
@@ -24,6 +32,7 @@
 				</ul>
 			</div>
 		</folder>
+
 	</div>
 	
 	<!-- three.js container -->
@@ -53,6 +62,7 @@
 	<script src="js/directives/Spectrum.js"></script>
 	<script src="js/directives/folder.js"></script>
 	<script src="js/directives/audioViz.js"></script>
+	<script src="vendor/terrainGenerator.js"></script>
 
 	<script src="vendor/three.js/Detector.js"></script>
 	<script src="components/threejs/build/three.min.js"></script>
