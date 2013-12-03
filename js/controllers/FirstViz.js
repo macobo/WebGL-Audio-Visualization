@@ -38,8 +38,7 @@ angular.module('audioVizApp')
 
       var geometry  = new THREE.TorusGeometry( 1, 0.42, 16, 16 );
       var material  = new THREE.MeshLambertMaterial({ambient: 0x808080, color: Math.random() * 0xffffff});
-      mesh  = new THREE.Mesh( geometry, material );
-      window.mesh = mesh;
+      mesh = new THREE.Mesh( geometry, material );
       scene.add( mesh );
       console.log(mesh, [mesh.scale.x, mesh.scale.y])
       mesh.scaleSpeedX = mesh.scaleSpeedY = 0;

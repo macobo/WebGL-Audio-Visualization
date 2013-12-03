@@ -13,6 +13,11 @@ angular.module('audioVizApp', [])
         controller: 'HedgehogViz',
         AnimName: 'HedgeHog'
       })
+     .when('/terrain', {
+        template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
+        controller: 'Terrain',
+        AnimName: 'Terrain'
+      })
       .otherwise({
         redirectTo: '/'
       });
