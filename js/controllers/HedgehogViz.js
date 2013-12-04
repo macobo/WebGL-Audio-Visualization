@@ -73,13 +73,7 @@ angular.module('audioVizApp')
   var lightAngleSpeed = 0.0;
   var lightAngle = 0.0;
   
-  var ii = 0;
     $scope.render = function(renderer) {
-    if (ii == 0) {
-      console.log(sphere);
-      console.log(scene);
-    }
-    ii++;
       // variable which is increase by Math.PI every seconds - usefull for animation
       var PIseconds = Date.now() * Math.PI;
 
@@ -111,19 +105,8 @@ angular.module('audioVizApp')
       var highIndex;
 
       for(var i = 1; i < vertexCount ; i++) {
-        //These will fix holes in the top and bottom
-        if (i <= widthSegCount) {
-          lowIndex = 0;
-          highIndex = widthSegCount;
-          //console.log("start: " + lowIndex + " - " + highIndex);
-        } else if(i >= vertexCount - heightSegCount) {
-          lowIndex = vertexCount - heightSegCount;
-          highIndex = vertexCount - 1;
-          //console.log("end: " + lowIndex + " - " + highIndex);
-        } else {
-          lowIndex = i-1;
-          highIndex = i;
-        }
+        lowIndex = i-1;
+        highIndex = i;
 
         var lowPivot = lowIndex * verticesPerSpectrum;
         var highPivot = highIndex * verticesPerSpectrum;
@@ -131,10 +114,6 @@ angular.module('audioVizApp')
 
         var vertexShift = ((spectrum.length > 0 && !isNaN(avg(spectrumSlice))) ? avg(spectrumSlice) / (0.1 + _.max(spectrumSlice)) : 0.0);
         var vertexPosition = sphere.geometry.vertices[highIndex];
-        
-        if (ii == 300) {
-          console.log(sphere.geometry.initialVertices[highIndex]);
-        }
 
         currentPositionSpeed.multiplyScalar(0.0);
         currentPositionSpeed.add(sphere.geometry.initialVertices[highIndex]);
