@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('audioVizApp')
-  .controller('HedgehogViz', function($scope, AudioService) {
-    var scene, camera, cameraControls, composer, sphere;
+  .controller('SphereSpectrumViz', function($scope, AudioService, params) {
+    var scene, camera, composer, sphere;
     var lights = [];
     var widthSegCount = 16;
     var heightSegCount = 18;
     var vertexCount = widthSegCount * heightSegCount;
     var initialPositionsSaved = false;
+    var vertexChoiceStep = (params.step != undefined) ? params.step : 1;
 
     $scope.scene_init = function(renderer, width, height) {
       scene = new THREE.Scene();
@@ -59,7 +60,6 @@ angular.module('audioVizApp')
       var effectScreen= new THREE.ShaderPass(THREE.ShaderExtras[ "screen" ]);
       effectScreen.renderToScreen = true;
       composer.addPass(effectScreen);
-
     };
   
   var sum = function(array) {
@@ -109,8 +109,8 @@ angular.module('audioVizApp')
       var lowIndex;
       var highIndex;
 
-      for(var i = 1; i < vertexCount ; i++) {
-        lowIndex = i-1;
+      for(var i = 1; i < vertexCount ; i += vertexChoiceStep) {
+        lowIndex = i-vertexChoiceStep;
         highIndex = i;
 
         var lowPivot = lowIndex * verticesPerSpectrum;
@@ -124,7 +124,7 @@ angular.module('audioVizApp')
         currentPositionSpeed.add(sphere.geometry.initialVertices[highIndex]);
         currentPositionSpeed.multiplyScalar(1.0 + 8.0 * vertexShift);
         currentPositionSpeed.sub(sphere.geometry.vertices[highIndex]);
-        currentPositionSpeed.divideScalar(10.0);
+        currentPositionSpeed.divideScalar(10.0 - vertexChoiceStep);
         
         sphere.geometry.positionSpeed[highIndex] = currentPositionSpeed; 
         sphere.geometry.vertices[highIndex].add(sphere.geometry.positionSpeed[highIndex]);

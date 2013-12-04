@@ -8,10 +8,29 @@ angular.module('audioVizApp', [])
         controller: 'FirstViz',
         AnimName: 'Torus'
       })
-	   .when('/2', {
+	   .when('/angels', {
         template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
-        controller: 'HedgehogViz',
-        AnimName: 'HedgeHog'
+        controller: 'SphereSpectrumViz',
+        AnimName: 'Angels',
+        resolve: { 
+          params: function() { return { step: 4 }; } 
+        }
+      })
+	   .when('/hedgehog', {
+        template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
+        controller: 'SphereSpectrumViz',
+        AnimName: 'Hedgehog',
+        resolve: { 
+          params: function() { return { step: 6 }; } 
+        }
+      })
+	   .when('/lotus', {
+        template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
+        controller: 'SphereSpectrumViz',
+        AnimName: 'Lotus',
+        resolve: { 
+          params: function() { return { step: 1 }; } 
+        }
       })
      .when('/terrain', {
         templateUrl: 'views/terrain.html',
