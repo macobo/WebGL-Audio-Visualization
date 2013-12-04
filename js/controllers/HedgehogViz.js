@@ -125,7 +125,7 @@ angular.module('audioVizApp')
         sphere.geometry.vertices[highIndex].add(sphere.geometry.positionSpeed[highIndex]);
         
         sphere.geometry.verticesNeedUpdate = true;
-
+        sphere.geometry.normalsNeedUpdate = true;
       }
       sphere.rotation.y += (!isNaN(avg(spectrum)) ? (avg(spectrum)) : 0.0);
       sphere.geometry.__dirtyVertices = true;
