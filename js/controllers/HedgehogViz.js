@@ -20,9 +20,15 @@ angular.module('audioVizApp')
       // transparently support window resize
       THREEx.WindowResize.bind(renderer, camera);
 
-      var light = new THREE.AmbientLight( (Math.random()*0.4 + 0.3) * 0xffffff );
+      var ambientColor = (0.15) * 0xffffff;
+      var light = new THREE.AmbientLight( ambientColor );
       scene.add( light );
       lights.push(light);
+      
+      var light4 = new THREE.DirectionalLight( Math.random() * 0.01 * ambientColor );
+      light4.position.set( 0.0, 0.0, 1.0 ).normalize().multiplyScalar(1.2);
+      scene.add( light4 );
+      lights.push(light4);
 
       var light5 = new THREE.PointLight( 0xff0000 );
       light5.position.set( 1.0, 0.0, -1.0 ).normalize().multiplyScalar(1.2);
@@ -30,30 +36,29 @@ angular.module('audioVizApp')
       lights.push(light5);
 
       var geometry  = new THREE.SphereGeometry(1, widthSegCount, heightSegCount);
-      var material  = new THREE.MeshLambertMaterial({ambient: 0x808080, color: Math.max(Math.random()*0.2+0.2, 1.0) * 0xffffff});
-      var mesh  = new THREE.Mesh( geometry, material );
-
-      mesh.scale.x = 0.2;
-      mesh.scale.y = 0.2;
-      mesh.scale.z = 0.2;
-
-      sphere = mesh;
+      var material  = new THREE.MeshLambertMaterial({ambient: 0x808080, color: 0xffffff}); //Math.max(Math.random()*0.2+0.2, 1.0) * 
+      //material.shading = THREE.FlatShading;
+      sphere  = new THREE.Mesh( geometry, material );
+      sphere.scale.x = 0.2;
+      sphere.scale.y = 0.2;
+      sphere.scale.z = 0.2;
       sphere.rotation.x = Math.PI;
       
-      scene.add( mesh );
+      
+      scene.add(sphere);
       // define the stack of passes for postProcessing
-      composer = new THREE.EffectComposer( renderer );
+      composer = new THREE.EffectComposer(renderer);
       renderer.autoClear = false;
 
-      var renderModel = new THREE.RenderPass( scene, camera );
-      composer.addPass( renderModel );
+      var renderModel = new THREE.RenderPass(scene, camera);
+      composer.addPass(renderModel);
 
-      var effectBloom = new THREE.BloomPass( 1.5 );
-      composer.addPass( effectBloom );
+      var effectBloom = new THREE.BloomPass(1.5);
+      composer.addPass(effectBloom);
 
-      var effectScreen= new THREE.ShaderPass( THREE.ShaderExtras[ "screen" ] );
+      var effectScreen= new THREE.ShaderPass(THREE.ShaderExtras[ "screen" ]);
       effectScreen.renderToScreen = true;
-      composer.addPass( effectScreen );
+      composer.addPass(effectScreen);
 
     };
   
