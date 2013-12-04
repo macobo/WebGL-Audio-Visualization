@@ -43,6 +43,7 @@ angular.module('audioVizApp')
       sphere.scale.x = 0.2;
       sphere.scale.y = 0.2;
       sphere.scale.z = 0.2;
+      sphere.position.y = 0.2;
       sphere.rotation.x = Math.PI;
       
       
