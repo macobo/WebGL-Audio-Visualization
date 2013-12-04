@@ -1,12 +1,14 @@
 angular.module('audioVizApp')
-  .directive('audioViz', function (AudioService) {
+  .directive('audioViz', function (AudioService, $route) {
     var renderer, stats, scene;
 
     var linker = function(scope, element, attrs) {
+      var startRoute = $route.current;
       var animationLoop = function() {
         // loop on request animation loop
         // - it has to be at the begining of the function
         // - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+        if (startRoute.$$hashKey != $route.current.$$hashKey) return;
         requestAnimationFrame( animationLoop );
 
         // do the render

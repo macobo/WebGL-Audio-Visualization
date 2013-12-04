@@ -2,7 +2,7 @@
 
 angular.module('audioVizApp')
   .service('FakeRandom', function() {
-    var random = Math.random();
+    var random = Math.random;
     var cache = [], at = 0;
 
     var service = {
@@ -20,7 +20,8 @@ angular.module('audioVizApp')
       use: function() { Math.random = service.next; },
       unhook: function() { Math.random = random; },
       reset: function() { at = 0; cache = []; },
-      restart: function() { at = 0; }
+      restart: function() { at = 0; },
+      realRandom: random
     };
     return service;
   });

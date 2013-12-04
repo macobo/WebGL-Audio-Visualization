@@ -41,6 +41,7 @@ body
   color: rgb(238, 238, 238)
   font: 13px 'Lucida Grande', sans-serif
   text-shadow: 0 -1px 0 rgb(17, 17, 17)
+  overflow: hidden
   .button
     border-left: 3px solid rgb(47, 161, 214)
     background-color: #555
@@ -53,7 +54,7 @@ body
 
 .folder
   border-bottom: 1px solid rgba(255, 255, 255, 0.5)
-  .title
+  li.title
     line-height: 27px
     padding-left: 16px
     margin-left: 4px  
@@ -66,7 +67,11 @@ body
     margin-top: 1px
     background-color: #555
     margin-left: -6px
+    padding-top: 3px
     border-top: 1px solid rgba(255, 255, 255, 0.5)
+    > *
+      padding-left: 6px
+
 
 #container, .container
   position: absolute
@@ -96,6 +101,7 @@ spectrum
 // playlists
 .playlist
   padding: 5px 5px
+  padding-left: 0px
   li
     cursor: pointer
   .active
@@ -106,7 +112,7 @@ spectrum
 
 .links
   margin: 5px
-  padding-left: 6px
+  //padding-left: 6px
   a
     display: block
     color: white
@@ -120,3 +126,10 @@ spectrum
   left: 0px
   bottom: 0px
   min-height: 0%
+
+.slider
+  margin: 5px
+  .input
+    input
+      width: 100%
+      margin: 0px

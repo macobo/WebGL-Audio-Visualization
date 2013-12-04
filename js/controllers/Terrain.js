@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('audioVizApp')
-  .controller('Terrain', function($scope, AudioService) {
+  .controller('Terrain', function($scope, AudioService, FakeRandom) {
     var scene, camera, cameraControls, composer, mesh;
+    FakeRandom.use();
 
     $scope.camera = {
       fov: 45,
@@ -10,7 +11,9 @@ angular.module('audioVizApp')
       far: 5000
     };
     $scope.modelOpts = {
-      size: 64
+      size: 64,
+      smoothness: 1.0,
+      zScale: 200
     };
 
     $scope.scene_init = function(renderer, width, height) {
@@ -24,10 +27,21 @@ angular.module('audioVizApp')
       composer = new THREE.EffectComposer( renderer );
       renderer.autoClear = false;
     
-      $scope.model = generateTerrain(64, 64, 1);
-      $scope.update($scope.model, 200);
-      console.log(mesh);
+      createModel($scope.modelOpts);
     };
+
+    var prevOpts = null;
+    function createModel(options) {
+      options.size = options.size || 64;
+      options.smoothness = options.smoothness || 1.0;
+      options.zScale = options.zScale || 200;
+      if (!angular.equals(prevOpts, options)) {
+        FakeRandom.restart();
+        $scope.model = generateTerrain(options.size, options.size, options.smoothness);
+        $scope.update($scope.model, options.zScale);
+        prevOpts = angular.copy(options);
+      }
+    }
 
     function setupLights() {
       var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
@@ -88,5 +102,8 @@ angular.module('audioVizApp')
       //composer.render();
     };
 
-    console.log($scope.model);
+    $scope.$watch('modelOpts', function(newOpt) {
+      console.log(newOpt);
+      createModel(newOpt);
+    }, true);
   });
