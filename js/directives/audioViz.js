@@ -44,7 +44,14 @@ angular.module('audioVizApp')
       if( THREEx.FullScreen.available() ){
         THREEx.FullScreen.bindKey();
       }
-
+      
+      //This is a hack to re-init the scene. 
+      //http://stackoverflow.com/questions/11504320/why-does-re-initializing-the-webgl-context-break-my-usage-of-three-effectcompose
+      THREE.EffectComposer.camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0, 1 );
+      THREE.EffectComposer.quad = new THREE.Mesh( new THREE.PlaneGeometry( 2, 2 ), null );
+      THREE.EffectComposer.scene = new THREE.Scene();
+      THREE.EffectComposer.scene.add( THREE.EffectComposer.quad );
+      
       scope.sceneInit(renderer, element.width(), element.height());
       animationLoop();
     };
