@@ -4,7 +4,7 @@ angular.module('audioVizApp')
   .service('PlaylistService', function ($q) {
 
     SC.initialize({
-      client_id: "cbeb4fe25866e35cb329fa4acc298531",
+      client_id: 'cbeb4fe25866e35cb329fa4acc298531',
       debug: false
     });
     var playlist, sound;
@@ -25,8 +25,10 @@ angular.module('audioVizApp')
       options = options || {};
       options.autoPlay = true;
       options.useEQData = true;
+      options.usePeakData = true;
 
-      SC.stream("/tracks/"+id, options, function(_sound) {
+
+      SC.stream('/tracks/'+id, options, function(_sound) {
         sound = _sound;
         //sound.play();
         deferred.resolve(sound);

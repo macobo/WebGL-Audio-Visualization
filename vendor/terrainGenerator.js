@@ -17,11 +17,11 @@
      *     of the vertices of the terrain.
      */
 
-    function generateTerrain(width, height, smoothness) {
+    function generateTerrain(width, height, smoothness, random_function) {
         var smoothness = typeof smoothness === 'undefined' ? 1 : smoothness;
         var size = smallestPowerOfTwoAfter(Math.max(width, height));
 
-        var squareTerrain = generateSquareTerrain(size, smoothness);
+        var squareTerrain = generateSquareTerrain(size, smoothness, random_function);
         var terrain = [];
         // terrain is a matrix of size (width + 1) x (height + 1)
         for (var i = 0; i <= height; ++i) {
@@ -48,7 +48,8 @@
      *     of the vertices of the terrain. Each elevation will be between -1 and 1.
      */
 
-    function generateSquareTerrain(size, smoothness) {
+    function generateSquareTerrain(size, smoothness, random_function) {
+        random_function = random_function || Math.random;
         // throw error if size is not a power of two.
         if (size & (size - 1)) {
             throw new Error('Expected terrain size to be a power of 2, received ' +
@@ -59,7 +60,7 @@
         var mat = generateMatrix(size + 1);
 
         // iterate on the matrix using the square-diamond algorithm
-        iterate(mat, smoothness);
+        iterate(mat, smoothness, random_function);
 
         return mat;
     }
@@ -79,7 +80,7 @@
                 row.push(0);
             }
             matrix.push(row);
-        };
+        }
 
         return matrix;
     }
@@ -91,14 +92,14 @@
      * @param {number} smoothness - Smoothness of terrain.
      */
 
-    function iterate(matrix, smoothness) {
+    function iterate(matrix, smoothness, random_function) {
         // the count of iterations applied so far
         var counter = 0;
         // the total number of iterations to apply is log_2^(size of matrix)
         var numIteration = Math.log(matrix.length - 1) / Math.LN2;
         while (counter++ < numIteration) {
-            diamond(matrix, counter, smoothness);
-            square(matrix, counter, smoothness);
+            diamond(matrix, counter, smoothness, random_function);
+            square(matrix, counter, smoothness, random_function);
         }
     }
 
@@ -110,7 +111,7 @@
      * @param {number} smoothness - Smoothness of terrain.
      */
 
-    function diamond(matrix, depth, smoothness) {
+    function diamond(matrix, depth, smoothness, random_function) {
 
         var len = matrix.length;
         var terrainSize = len - 1;
@@ -150,7 +151,7 @@
                 var avg = average(heights);
 
                 // random offset
-                var offset = getH(smoothness, depth);
+                var offset = getH(smoothness, depth, random_function);
 
                 // set center height
                 matrix[ve[1]][ve[0]] = avg + offset;
@@ -166,9 +167,9 @@
      * @param {number} smoothness - Smoothness of terrain.
      */
 
-    function square(matrix, depth, smoothness) {
+    function square(matrix, depth, smoothness, random_function) {
 
-        var len = matrix.length
+        var len = matrix.length;
         var terrainSize = len - 1;
         var numSegs = 1 << (depth - 1);
         var span = terrainSize / numSegs;
@@ -223,13 +224,13 @@
                 if (vlu[1] > terrainSize) vlu[1] = half;
 
                 // above b
-                var vba = [x + half, y - half]
+                var vba = [x + half, y - half];
                 if (vba[1] < 0) vba[1] = terrainSize - half;
 
-                squareHelper(matrix, depth, smoothness, va, vg, vk, vfl, vf);
-                squareHelper(matrix, depth, smoothness, va, vba, vc, vg, vb);
-                squareHelper(matrix, depth, smoothness, vc, vhr, vm, vg, vh);
-                squareHelper(matrix, depth, smoothness, vk, vg, vm, vlu, vl);
+                squareHelper(matrix, depth, smoothness, va, vg, vk, vfl, vf, random_function);
+                squareHelper(matrix, depth, smoothness, va, vba, vc, vg, vb, random_function);
+                squareHelper(matrix, depth, smoothness, vc, vhr, vm, vg, vh, random_function);
+                squareHelper(matrix, depth, smoothness, vk, vg, vm, vlu, vl, random_function);
             }
         }
 
@@ -243,12 +244,12 @@
         }
     }
 
-    function squareHelper(matrix, depth, smoothness, a, b, c, d, t) {
+    function squareHelper(matrix, depth, smoothness, a, b, c, d, t, random_function) {
         var heights = [a, b, c, d].map(function(v) {
             return matrix[v[1]][v[0]];
         });
         var avg = average(heights);
-        var offset = getH(smoothness, depth);
+        var offset = getH(smoothness, depth, random_function);
         matrix[t[1]][t[0]] = avg + offset;
     }
 
@@ -260,17 +261,17 @@
      * @param {number} depth - Depth of current iteration(starts from 1).
      */
 
-    function getH(smoothness, depth) {
-        var sign = Math.random() > 0.5 ? 1 : -1;
+    function getH(smoothness, depth, random) {
+        var sign = random() > 0.5 ? 1 : -1;
         var reduce = 1;
         for (var i = 0; i < depth; ++i) {
             reduce *= Math.pow(2, -smoothness);
         }
-        return sign * Math.random() * reduce;
+        return sign * random() * reduce;
     }
 
 
-    function average(numbers) { 
+    function average(numbers) {
         var sum = 0;
         numbers.forEach(function(v) {
             sum += v;
@@ -308,6 +309,7 @@
         mesh.rotation.x = -Math.PI / 2;
         mesh.castShadow = true;
         mesh.receiveShadow = true;
+        mesh.geometry.dynamic = true;
 
         var vertices = mesh.geometry.vertices;
         for (var i = 0; i < model.length; ++i) {

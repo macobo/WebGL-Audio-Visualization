@@ -1,10 +1,57 @@
 'use strict';
 
-angular.module('audioVizApp')
-  .controller('Terrain', function($scope, AudioService, FakeRandom) {
-    var scene, camera, cameraControls, composer, mesh;
-    FakeRandom.use();
+_.sum = function(arr) { return _.reduce(arr, function(a, b) { return a+b; }, 0); };
+_.average = function(arr) { return _.sum(arr) / arr.length; };
 
+angular.module('audioVizApp')
+  .service('TerrainModel', function(FakeRandom) {
+    function createModel(options, random_function) {
+      options.size = options.size || 64;
+      options.smoothness = options.smoothness || 1.0;
+      options.zScale = options.zScale || 200;
+      return generateTerrain(options.size, options.size, options.smoothness, random_function);
+    }
+
+    function modifyMesh(mesh, size, f) {
+      mesh.geometry.verticesNeedUpdate = true;
+      var vertices = mesh.geometry.vertices;
+      for (var i = 0; i < size; ++i) {
+        for (var j = 0; j < size; ++j) {
+          vertices[i * size + j].z = f(i, j);
+        }
+      }
+      return mesh;
+    }
+
+    var constructor = function(options) {
+      options = angular.copy(options);
+      var randomGen = FakeRandom.new();
+      var model = createModel(options, randomGen.next);
+      var blank_mesh = getTerrainMesh(model, options.zScale);
+
+      var service = {};
+      service.update = function(new_options) {
+        randomGen.seek(0);
+        model = createModel(new_options, randomGen.next);
+        if (new_options.size != options.size) {
+          console.log("new mesh!", model.length);
+          blank_mesh = getTerrainMesh(model, new_options.zScale);
+        }
+      };
+      service.getMesh = function(zScale) {
+        modifyMesh(blank_mesh, model.length, function(i, j) {
+          return model[i][j] * zScale;
+        } );
+        return blank_mesh;
+      };
+
+      return service;
+    };
+    return { new: constructor };
+  })
+
+  .controller('Terrain', function($scope, AudioService, TerrainModel) {
+    var scene, camera, cameraControls, composer, mesh;
     $scope.camera = {
       fov: 45,
       near: 1,
@@ -21,27 +68,16 @@ angular.module('audioVizApp')
 
       camera = new THREE.PerspectiveCamera($scope.camera.fov, width / height,
         $scope.camera.near, $scope.camera.far);
-      camera.position.y = 400;
+      camera.position.y = 400;  
       setupLights();
 
       composer = new THREE.EffectComposer( renderer );
       renderer.autoClear = false;
-    
-      createModel($scope.modelOpts);
+      console.log(TerrainModel);
+      $scope.model = TerrainModel.new($scope.modelOpts);
+      mesh = $scope.model.getMesh($scope.modelOpts.zScale);
+      scene.add(mesh);
     };
-
-    var prevOpts = null;
-    function createModel(options) {
-      options.size = options.size || 64;
-      options.smoothness = options.smoothness || 1.0;
-      options.zScale = options.zScale || 200;
-      if (!angular.equals(prevOpts, options)) {
-        FakeRandom.restart();
-        $scope.model = generateTerrain(options.size, options.size, options.smoothness);
-        $scope.update($scope.model, options.zScale);
-        prevOpts = angular.copy(options);
-      }
-    }
 
     function setupLights() {
       var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
@@ -57,39 +93,6 @@ angular.module('audioVizApp')
       auxLight.castShadow = true;
       scene.add(auxLight);
     }
-
-    function drawCoordinate(center, length) {
-      var othorgonals = [
-        [new THREE.Vector3(length, 0, 0), 0xff0000],
-        [new THREE.Vector3(0, length, 0), 0x00ff00],
-        [new THREE.Vector3(0, 0, length), 0x0000ff]
-      ];
-
-      _.each(othorgonals, function(p) {
-        var v = p[0];
-        var color = p[1];
-
-        var geometry = new THREE.Geometry();
-
-        geometry.vertices.push(new THREE.Vertex(center));
-        geometry.vertices.push(new THREE.Vertex(center.clone().addSelf(v)));
-        var material = new THREE.LineBasicMaterial({
-          color: color,
-          opacity: 1,
-          linewidth: 3
-        });
-
-        var line = new THREE.Line(geometry, material);
-
-        scene.add(line);
-      });
-    }
-
-    $scope.update = function(model, zScale) {
-      scene.remove(mesh);
-      mesh = getTerrainMesh(model, zScale);
-      scene.add(mesh);
-    };
   
     $scope.render = function(renderer) {
       var timer = new Date().getTime() * 0.0001;
@@ -97,13 +100,17 @@ angular.module('audioVizApp')
       camera.position.z = Math.sin(timer) * 800;
       camera.lookAt(scene.position);
 
+      $scope.modelOpts.zScale = Math.min(2000, 2000 * AudioService.volume());
+
       renderer.clear();
       renderer.render(scene, camera);
-      //composer.render();
     };
 
     $scope.$watch('modelOpts', function(newOpt) {
-      console.log(newOpt);
-      createModel(newOpt);
+      console.log(newOpt, mesh, AudioService.volume());
+      $scope.model.update(newOpt);
+      scene.remove(mesh);
+      mesh = $scope.model.getMesh(newOpt.zScale);
+      scene.add(mesh);
     }, true);
   });
