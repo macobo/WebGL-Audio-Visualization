@@ -282,7 +282,8 @@
         return ~~(640 / Math.max(width, height));
     }
 
-    function getTerrainMesh(model) {
+    function getTerrainMesh(model, zScale) {
+        zScale = zScale || 1.0;
 
         var modelWidth = model[0].length - 1;
         var modelHeight = model.length - 1;
@@ -309,10 +310,9 @@
         mesh.receiveShadow = true;
 
         var vertices = mesh.geometry.vertices;
-        console.log(vertices);
         for (var i = 0; i < model.length; ++i) {
             for (var j = 0; j < model.length; ++j) {
-                vertices[i * model.length + j].z = model[i][j];
+                vertices[i * model.length + j].z = model[i][j] * zScale;
             }
         }
 

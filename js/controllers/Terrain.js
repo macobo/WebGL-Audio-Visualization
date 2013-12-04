@@ -9,6 +9,9 @@ angular.module('audioVizApp')
       near: 1,
       far: 5000
     };
+    $scope.modelOpts = {
+      size: 64
+    };
 
     $scope.scene_init = function(renderer, width, height) {
       scene = new THREE.Scene();
@@ -20,18 +23,10 @@ angular.module('audioVizApp')
 
       composer = new THREE.EffectComposer( renderer );
       renderer.autoClear = false;
-
-      var renderModel = new THREE.RenderPass( scene, camera );
-      composer.addPass( renderModel );
-
-      var effectBloom = new THREE.BloomPass( 1.5 );
-      composer.addPass( effectBloom );
-
-      var effectScreen= new THREE.ShaderPass( THREE.ShaderExtras[ "screen" ] );
-      effectScreen.renderToScreen = true;
-      composer.addPass( effectScreen );
     
-      $scope.update($scope.model);
+      $scope.model = generateTerrain(64, 64, 1);
+      $scope.update($scope.model, 200);
+      console.log(mesh);
     };
 
     function setupLights() {
@@ -76,9 +71,9 @@ angular.module('audioVizApp')
       });
     }
 
-    $scope.update = function(model) {
+    $scope.update = function(model, zScale) {
       scene.remove(mesh);
-      mesh = getTerrainMesh(model);
+      mesh = getTerrainMesh(model, zScale);
       scene.add(mesh);
     };
   
@@ -89,8 +84,9 @@ angular.module('audioVizApp')
       camera.lookAt(scene.position);
 
       renderer.clear();
-      composer.render();
+      renderer.render(scene, camera);
+      //composer.render();
     };
 
-    $scope.model = generateTerrain(32, 32, 1.0);
+    console.log($scope.model);
   });

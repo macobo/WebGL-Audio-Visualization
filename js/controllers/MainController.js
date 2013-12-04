@@ -10,6 +10,6 @@ angular.module('audioVizApp')
     });
 
     $scope.isActive = function(r) {
-      return $route.current.AnimName === r.AnimName;
+      return $route.current && $route.current.AnimName === r.AnimName;
     };
   });

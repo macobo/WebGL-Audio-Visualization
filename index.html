@@ -4,11 +4,10 @@
 		<title>AudioViz</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		
 		<link  href="css/main.css" rel="stylesheet"/>
 	</head>
 <body ng-controller="MainController">
-	<div id="sidebar" class="side-buttons-container">
+	<div class="sidebar side-buttons-container">
 		<folder title="Links" open>
 			<div class="links" ng-cloak>
 				<a ng-repeat="link in links" ng-href="#{{link.href}}" 
@@ -53,6 +52,7 @@
 
 	<script src="js/app.js"></script>
 	<script src="js/services/AudioService.js"></script>
+	<script src="js/services/FakeRandom.js"></script>
 	<script src="js/services/PlaylistService.js"></script>
 	<script src="js/services/IntervalService.js"></script>
 	<script src="js/controllers/MainController.js"></script>

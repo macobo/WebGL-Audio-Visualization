@@ -14,7 +14,7 @@ angular.module('audioVizApp', [])
         AnimName: 'HedgeHog'
       })
      .when('/terrain', {
-        template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
+        templateUrl: 'views/terrain.html',
         controller: 'Terrain',
         AnimName: 'Terrain'
       })
