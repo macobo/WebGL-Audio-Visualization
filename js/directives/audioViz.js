@@ -4,6 +4,7 @@ angular.module('audioVizApp')
 
     var linker = function(scope, element, attrs) {
       var startRoute = $route.current;
+      var t;
       var animationLoop = function() {
         // loop on request animation loop
         // - it has to be at the begining of the function

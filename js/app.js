@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('audioVizApp', [])
+angular.module('audioVizApp', ['ngRoute', 'ngAnimate'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -12,24 +12,24 @@ angular.module('audioVizApp', [])
         template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
         controller: 'SphereSpectrumViz',
         AnimName: 'Angels',
-        resolve: { 
-          params: function() { return { step: 4 }; } 
+        resolve: {
+          params: function() { return { step: 4 }; }
         }
       })
 	   .when('/hedgehog', {
         template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
         controller: 'SphereSpectrumViz',
         AnimName: 'Hedgehog',
-        resolve: { 
-          params: function() { return { step: 6 }; } 
+        resolve: {
+          params: function() { return { step: 6 }; }
         }
       })
 	   .when('/lotus', {
         template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
         controller: 'SphereSpectrumViz',
         AnimName: 'Lotus',
-        resolve: { 
-          params: function() { return { step: 1 }; } 
+        resolve: {
+          params: function() { return { step: 1 }; }
         }
       })
      .when('/terrain', {

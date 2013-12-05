@@ -27,6 +27,7 @@ angular.module('audioVizApp')
       options = angular.copy(options);
       var randomGen = FakeRandom.new();
       var model = createModel(options, randomGen.next);
+      var target_model = createModel(options, randomGen.next);
       var blank_mesh = getTerrainMesh(model, options.zScale);
 
       var service = {};
@@ -34,14 +35,19 @@ angular.module('audioVizApp')
         randomGen.seek(0);
         model = createModel(new_options, randomGen.next);
         if (new_options.size != options.size) {
-          console.log("new mesh!", model.length);
           blank_mesh = getTerrainMesh(model, new_options.zScale);
+          options = angular.copy(new_options);
         }
       };
+
+      var prevZ = 0;
       service.getMesh = function(zScale) {
+        var t = 0.1;
+        var newZ = prevZ * (1-t) + t * zScale;
         modifyMesh(blank_mesh, model.length, function(i, j) {
-          return model[i][j] * zScale;
-        } );
+          return model[i][j] * newZ;
+        });
+        prevZ = newZ;
         return blank_mesh;
       };
 
@@ -100,17 +106,21 @@ angular.module('audioVizApp')
       camera.position.z = Math.sin(timer) * 800;
       camera.lookAt(scene.position);
 
+      $scope.model.update($scope.modelOpts);
+      //scene.remove(mesh);
+      mesh = $scope.model.getMesh($scope.modelOpts.zScale);
+      //scene.add(mesh);
       $scope.modelOpts.zScale = Math.min(2000, 2000 * AudioService.volume());
 
       renderer.clear();
       renderer.render(scene, camera);
     };
 
-    $scope.$watch('modelOpts', function(newOpt) {
+/*    $scope.$watch('modelOpts', function(newOpt) {
       console.log(newOpt, mesh, AudioService.volume());
       $scope.model.update(newOpt);
       scene.remove(mesh);
       mesh = $scope.model.getMesh(newOpt.zScale);
       scene.add(mesh);
-    }, true);
+    }, true);*/
   });

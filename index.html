@@ -4,10 +4,11 @@
 		<title>AudioViz</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link  href="css/main.css" rel="stylesheet"/>
+		<link href="css/main.css" rel="stylesheet"/>
+		<link href="css/animate.css" rel="stylesheet"/>
 	</head>
 <body ng-controller="MainController">
-	<div class="sidebar side-buttons-container">
+	<sidebar closable>
 		<folder title="Links" open>
 			<div class="links" ng-cloak>
 				<a ng-repeat="link in links" ng-href="#{{link.href}}" 
@@ -26,13 +27,12 @@
 							ng-click="setTrack($index)"
 							ng-class="{active: track==current_track}" ng-cloak>
 						<span class="song-title">{{ $index+1 }}. {{ track.title }}</span>
-
 					</li>
 				</ul>
 			</div>
 		</folder>
 
-	</div>
+	</sidebar>
 	
 	<!-- three.js container -->
   <div id="container" ng-view></div>
@@ -46,7 +46,9 @@
 	<script src="components/jquery/jquery.min.js"></script>
 	<script src="components/underscore/underscore-min.js"></script>
 
-	<script src="components/angular-unstable/angular.min.js"></script>
+	<script src="components/angular/angular.js"></script>
+	<script src="components/angular-animate/angular-animate.min.js"></script>
+	<script src="components/angular-route/angular-route.min.js"></script>
 	<script src="components/dsp.js/dsp.js"></script>
 	<script src="js/AudioStuff.js"></script>
 
@@ -64,6 +66,7 @@
 	<script src="js/directives/folder.js"></script>
 	<script src="js/directives/audioViz.js"></script>
 	<script src="js/directives/slider.js"></script>
+	<script src="js/directives/sidebar.js"></script>
 	<script src="vendor/terrainGenerator.js"></script>
 
 	<script src="vendor/three.js/Detector.js"></script>
