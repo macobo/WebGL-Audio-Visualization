@@ -71,7 +71,7 @@ angular.module('audioVizApp')
     return { new: constructor };
   })
 
-  .controller('Terrain', function($scope, AudioService, TerrainModel, SWITCH_FREQUENCY) {
+  .controller('Terrain', function($scope, AudioService, TerrainModel, BeatDetector, SWITCH_FREQUENCY) {
     var scene, camera, cameraControls, composer, mesh;
     $scope.camera = {
       fov: 45,
@@ -94,7 +94,6 @@ angular.module('audioVizApp')
 
       composer = new THREE.EffectComposer( renderer );
       renderer.autoClear = false;
-      console.log(TerrainModel);
       $scope.model = TerrainModel.new($scope.modelOpts);
       mesh = $scope.model.getMesh($scope.modelOpts.zScale);
       scene.add(mesh);
@@ -132,8 +131,13 @@ angular.module('audioVizApp')
       }
       sinceLastChange += time_delta;
 
+      var spectrum = AudioService.spectrum();
+      BeatDetector.update(spectrum);
+      var pulse = BeatDetector.pulse();
+      console.log(pulse);
+
       if (sinceLastChange >= SWITCH_FREQUENCY) {
-        console.log(sinceLastChange);
+        console.log('Switching layout', sinceLastChange);
         sinceLastChange = 0;
         $scope.model.generateNextTarget();
       }
