@@ -1,7 +1,7 @@
 angular.module('audioVizApp')
   .directive('sidebar', function () {
     var linker = function(scope, element, attrs) {
-      scope.canClose = _.has(attrs, "closable");  
+      scope.canClose = _.has(attrs, "closable");
       console.log(attrs);
       scope.toggle = function() {
         scope.isclosed = !scope.isclosed;

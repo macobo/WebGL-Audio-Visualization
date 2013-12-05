@@ -4,7 +4,7 @@ angular.module('audioVizApp')
 
     var linker = function(scope, element, attrs) {
       var startRoute = $route.current;
-      var t;
+      var prev_frame;
       var animationLoop = function() {
         // loop on request animation loop
         // - it has to be at the begining of the function
@@ -13,7 +13,10 @@ angular.module('audioVizApp')
         requestAnimationFrame( animationLoop );
 
         // do the render
-        scope.render(renderer);
+        var new_frame = new Date().getTime();
+        var d = new_frame-prev_frame;
+        scope.render(renderer, d || 0);
+        prev_frame = new_frame;
 
         // update stats
         stats.update();
