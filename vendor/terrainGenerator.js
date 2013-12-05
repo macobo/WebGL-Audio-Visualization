@@ -295,21 +295,25 @@
         var width = (model[0].length - 1) * segLength;
 
         //var texture = getTexture(model, width, height);
+        var material = new THREE.MeshLambertMaterial({
+          color: 0x777777,
+          wireframe: true,
+        });
+        material.vertexColors = THREE.VertexColors;
 
         var mesh = new THREE.Mesh(
             new THREE.PlaneGeometry(width, height, model.length - 1, model.length - 1),
             //new THREE.MeshBasicMaterial({
             //map: texture
             //})
-            new THREE.MeshLambertMaterial({
-                color: 0x777777,
-                wireframe: true,
-            })
+            material
         );
         mesh.rotation.x = -Math.PI / 2;
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         mesh.geometry.dynamic = true;
+        console.log(mesh.geometry.faces[0]);
+        mesh.geometry.colorsNeedUpdate = true;
 
         var vertices = mesh.geometry.vertices;
         for (var i = 0; i < model.length; ++i) {

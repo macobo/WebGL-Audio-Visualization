@@ -19,7 +19,8 @@ angular.module('audioVizApp')
           return r;
         },
         seek: function(pos) { at = pos; },
-        realRandom: random
+        realRandom: random,
+        cache: cache
       };
       return service;
     };

@@ -13,7 +13,7 @@ angular.module('audioVizApp')
     function createModel(options, random_function) {
       options.size = options.size || 64;
       options.smoothness = options.smoothness || 1.0;
-      options.zScale = options.zScale || 200;
+      //options.zScale = options.zScale || 200;
       return generateTerrain(options.size, options.size, options.smoothness, random_function);
     }
 
@@ -38,12 +38,13 @@ angular.module('audioVizApp')
           since_blend_start = 0;
 
       service.update = function(new_options, delta_time) {
-        randomGen.seek(0);
-        target_model = createModel(new_options, randomGen.next);
         since_blend_start += delta_time;
-        if (new_options.size != options.size) {
+        if (new_options.size !== options.size || new_options.smoothness !== options.smoothness) {
+          randomGen.seek(0);
+          target_model = createModel(new_options, randomGen.next);
           blank_mesh = getTerrainMesh(model, new_options.zScale);
           options = angular.copy(new_options);
+  
         }
       };
 
@@ -89,7 +90,7 @@ angular.module('audioVizApp')
 
       camera = new THREE.PerspectiveCamera($scope.camera.fov, width / height,
         $scope.camera.near, $scope.camera.far);
-      camera.position.y = 400;  
+      camera.position.y = 400;
       setupLights();
 
       composer = new THREE.EffectComposer( renderer );
@@ -97,11 +98,12 @@ angular.module('audioVizApp')
       $scope.model = TerrainModel.new($scope.modelOpts);
       mesh = $scope.model.getMesh($scope.modelOpts.zScale);
       scene.add(mesh);
+      console.log(mesh);
     };
 
     function setupLights() {
-      var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
-      scene.add(ambientLight);
+      var ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+      //scene.add(ambientLight);
 
       var mainLight = new THREE.SpotLight(0xffffff, 1.0);
       mainLight.position.set(500, 500, 500);
@@ -118,7 +120,7 @@ angular.module('audioVizApp')
     $scope.render = function(renderer, time_delta) {
       var timer = new Date().getTime() * 0.0001;
       camera.position.x = Math.cos(timer) * 800;
-      camera.position.z = Math.sin(timer) * 800;
+      camera.position.z = Math.sin(timer) * 200;
       camera.lookAt(scene.position);
 
       $scope.model.update($scope.modelOpts, time_delta);
@@ -134,14 +136,14 @@ angular.module('audioVizApp')
       var spectrum = AudioService.spectrum();
       BeatDetector.update(spectrum);
       var pulse = BeatDetector.pulse();
-      console.log(pulse);
+      //console.log(pulse);
 
-      if (sinceLastChange >= SWITCH_FREQUENCY) {
+      if (pulse && sinceLastChange >= SWITCH_FREQUENCY) {
         console.log('Switching layout', sinceLastChange);
         sinceLastChange = 0;
         $scope.model.generateNextTarget();
       }
-      $scope.modelOpts.zScale = Math.min(2000, 2000 * AudioService.volume());
+      $scope.modelOpts.zScale = Math.min(1000, 1000 * AudioService.volume());
 
       renderer.clear();
       renderer.render(scene, camera);
