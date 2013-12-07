@@ -1,13 +1,22 @@
 'use strict';
 
 angular.module('audioVizApp')
-  .service('AudioService', function (PlaylistService) {
+  .service('AudioService', function (PlaylistService, Dancer) {
 
     return {
       spectrum: function() {
         var sound = PlaylistService.sound();
         if (sound) {
           return _.map(sound.eqData, function(el) { return parseFloat(el, 10); });
+        } else {
+          return [];
+        }
+        //return Dancer.spectrum();
+      },
+      waveform: function() {
+        var sound = PlaylistService.sound();
+        if (sound) {
+          return sound.waveformData;
         } else {
           return [];
         }

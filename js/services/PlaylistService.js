@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('audioVizApp')
-  .service('PlaylistService', function ($q) {
+  .service('PlaylistService', function ($q, Dancer) {
 
     SC.initialize({
       client_id: 'cbeb4fe25866e35cb329fa4acc298531',
@@ -26,7 +26,11 @@ angular.module('audioVizApp')
       options.autoPlay = true;
       options.useEQData = true;
       options.usePeakData = true;
-
+      options.useWaveformData = true;
+      options.whileplaying = function() {
+        Dancer.update(sound);
+        //console.log("update");
+      };
 
       SC.stream('/tracks/'+id, options, function(_sound) {
         sound = _sound;

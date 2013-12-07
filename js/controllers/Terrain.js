@@ -9,6 +9,7 @@ angular.module('audioVizApp')
   .constant('SWITCH_FREQUENCY', 5000)
   .service('TerrainModel', function(FakeRandom, BLEND_DURATION) {
     function interpolate(a, b, t) { return a + (b-a) * t; }
+    function easeOutCubic(a, b, t) { t--; return a + (b-a) * (t*t*t-1); }
 
     function createModel(options, random_function) {
       options.size = options.size || 64;
@@ -72,7 +73,7 @@ angular.module('audioVizApp')
     return { new: constructor };
   })
 
-  .controller('Terrain', function($scope, AudioService, TerrainModel, BeatDetector, SWITCH_FREQUENCY) {
+  .controller('Terrain', function($scope, AudioService, TerrainModel, Dancer, SWITCH_FREQUENCY) {
     var scene, camera, cameraControls, composer, mesh;
     $scope.camera = {
       fov: 45,
@@ -134,11 +135,15 @@ angular.module('audioVizApp')
       sinceLastChange += time_delta;
 
       var spectrum = AudioService.spectrum();
-      BeatDetector.update(spectrum);
-      var pulse = BeatDetector.pulse();
-      //console.log(pulse);
+      if (Dancer.is_beat) {
+        renderer.clear();
+        return;
+      }
+/*      BeatDetector.update(spectrum);
+      var pulse = BeatDetector.isBeat();*/
+      // console.log(pulse);
 
-      if (pulse && sinceLastChange >= SWITCH_FREQUENCY) {
+      if (sinceLastChange >= SWITCH_FREQUENCY) {
         console.log('Switching layout', sinceLastChange);
         sinceLastChange = 0;
         $scope.model.generateNextTarget();
