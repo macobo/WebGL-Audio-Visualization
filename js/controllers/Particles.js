@@ -54,6 +54,11 @@ angular.module('audioVizApp')
       initEmitters();
     };
 
+    var drift = function(base, distance) {
+      var r = Math.random() * 2-1;
+      return base + Math.floor(r * distance);
+    }
+
     var initEmitters = function() {
       var vertices = particleCloud.geometry.vertices;
       var values_size = attributes.size.value;
@@ -63,7 +68,7 @@ angular.module('audioVizApp')
 
       var setTargetParticle = function() {
         var target = Pool.get();
-        values_size[ target ] = Math.random() * 200 + 100;
+        values_size[ target ] = Math.random() * 2000 + 100;
         return target;
       };
 
@@ -75,7 +80,9 @@ angular.module('audioVizApp')
         if ( target ) {
           hue += 0.003 * 1.0;
           if ( hue > 1 ) hue -= 1;
+
           particles.vertices[ target ] = p.position;
+
           values_color[ target ].setHSL( hue, 0.6, 0.1 );
         }
       };
@@ -95,14 +102,17 @@ angular.module('audioVizApp')
       emitter = new SPARKS.Emitter(new RythmCounter());
       addInitializer(emitter, function(emitter, particle) {
         var pos = emitter_position;
-        particle.position.set(pos.x, pos.y, pos.z);
+        var x = drift(pos.x, 100),
+            y = drift(pos.y, 100),
+            z = drift(pos.z, 100);
+        particle.position.set(x, y, z);
       });
 
-      emitter.addInitializer( new SPARKS.Lifetime( 1, 15 ));
+      emitter.addInitializer( new SPARKS.Lifetime( 3, 5 ));
       emitter.addInitializer( new SPARKS.Target( null, setTargetParticle ) );
       addInitializer(emitter, function(e, particle) {
         var d = Dancer.is_beat ? 200 : 200;
-        values_size[particle.target] = Math.random() * d + 100;
+        //values_size[particle.target] = Math.random() * d + 100;
       });
 
 
@@ -112,7 +122,7 @@ angular.module('audioVizApp')
       emitter.addAction( new SPARKS.Age() );
       emitter.addAction( new SPARKS.Accelerate( 0, 0, -50 ) );
       emitter.addAction( new SPARKS.Move() );
-      emitter.addAction( new SPARKS.RandomDrift( 1000, 100, 2000 ) );
+      emitter.addAction( new SPARKS.RandomDrift( 10000, 1000, 20000 ) );
 
       emitter.addCallback( 'created', onParticleCreated );
       emitter.addCallback( 'dead', onParticleDead );
@@ -123,7 +133,7 @@ angular.module('audioVizApp')
       this.leftover = 0;
       this.rate = 10;
       this.updateEmitter = function(emitter, time) {
-        var rate = Dancer.is_beat ? 100 : 1;
+        var rate = Dancer.is_beat ? 50 : 1;
         var targetRelease = time * rate + this.leftover;
         var actualRelease = Math.floor(targetRelease);
 
