@@ -13,7 +13,7 @@ angular.module('audioVizApp')
         requestAnimationFrame( animationLoop );
 
         // do the render
-        var d = clock.getDelta() * 1000; 
+        var d = clock.getDelta() * 1000;
         scope.render(renderer, d);
 
         // update stats
@@ -22,7 +22,7 @@ angular.module('audioVizApp')
 
       if( Detector.webgl ){
         renderer = new THREE.WebGLRenderer({
-          antialias   : true, // to get smoother output
+          // antialias   : true, // to get smoother output
           preserveDrawingBuffer : true,  // to allow screenshot
           maxLights: 50
         });
