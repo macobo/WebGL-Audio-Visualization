@@ -33,8 +33,9 @@ angular.module('audioVizApp')
       options = angular.copy(options);
       var randomGen = FakeRandom.new(),
           model = createModel(options, randomGen.next),
+          peaks = getPeaks(model, 5),
           target_model = model,
-          blank_mesh = getTerrainMesh(model, options.zScale),
+          blank_mesh = getTerrainMesh(model, 10),
           service = {},
           since_blend_start = 0;
 
@@ -42,10 +43,12 @@ angular.module('audioVizApp')
         since_blend_start += delta_time;
         if (new_options.size !== options.size || new_options.smoothness !== options.smoothness) {
           randomGen.seek(0);
+
           target_model = createModel(new_options, randomGen.next);
+          model = target_model;
+          peaks = getPeaks(target_model, 5);
           blank_mesh = getTerrainMesh(model, new_options.zScale);
           options = angular.copy(new_options);
-  
         }
       };
 
@@ -54,7 +57,7 @@ angular.module('audioVizApp')
         var t = 0.8;
         var newZ = prevZ * (1-t) + t * zScale;
         var a = _.clamp(since_blend_start/BLEND_DURATION, 0, 1);
-        modifyMesh(blank_mesh, model.length, function(i, j) {
+        modifyMesh(blank_mesh,  model.length, function(i, j) {
           return interpolate(model[i][j], target_model[i][j], a) * newZ;
         });
         prevZ = newZ;
@@ -65,7 +68,17 @@ angular.module('audioVizApp')
         randomGen = FakeRandom.new();
         model = target_model;
         target_model = createModel(options, randomGen.next);
+        peaks = getPeaks(target_model, 5);
         since_blend_start = 0;
+      };
+
+      service.peaks = peaks;
+      service.peakPosition = function(peak) {
+        var size = model.length;
+        var i = peak[0]*size+peak[1];
+        window.mesh = blank_mesh;
+        console.log(i, size, blank_mesh.geometry.vertices.length, blank_mesh.geometry.vertices[i]);
+        return blank_mesh.geometry.vertices[i];
       };
 
       return service;
@@ -74,6 +87,7 @@ angular.module('audioVizApp')
   })
 
   .controller('Terrain', function($scope, AudioService, TerrainModel, Dancer, SWITCH_FREQUENCY) {
+    $scope.Dancer = Dancer;
     var scene, camera, cameraControls, composer, mesh;
     $scope.camera = {
       fov: 45,
@@ -92,12 +106,12 @@ angular.module('audioVizApp')
       camera = new THREE.PerspectiveCamera($scope.camera.fov, width / height,
         $scope.camera.near, $scope.camera.far);
       camera.position.y = 400;
-      setupLights();
 
       composer = new THREE.EffectComposer( renderer );
       renderer.autoClear = false;
       $scope.model = TerrainModel.new($scope.modelOpts);
       mesh = $scope.model.getMesh($scope.modelOpts.zScale);
+      setupLights();
       scene.add(mesh);
       console.log(mesh);
     };
@@ -139,9 +153,6 @@ angular.module('audioVizApp')
         renderer.clear();
         return;
       }
-/*      BeatDetector.update(spectrum);
-      var pulse = BeatDetector.isBeat();*/
-      // console.log(pulse);
 
       if (sinceLastChange >= SWITCH_FREQUENCY) {
         console.log('Switching layout', sinceLastChange);
@@ -154,11 +165,10 @@ angular.module('audioVizApp')
       renderer.render(scene, camera);
     };
 
-/*    $scope.$watch('modelOpts', function(newOpt) {
-      console.log(newOpt, mesh, AudioService.volume());
-      $scope.model.update(newOpt);
-      scene.remove(mesh);
-      mesh = $scope.model.getMesh(newOpt.zScale);
-      scene.add(mesh);
-    }, true);*/
+    // $scope.$watch('modelOpts.size', function(newOpt) {
+    //     $scope.model.update($scope.modelOpts);
+    //     scene.remove(mesh);
+    //     mesh = $scope.model.getMesh($scope.modelOpts.zScale);
+    //     scene.add(mesh);
+    // });
   });

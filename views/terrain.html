@@ -1,8 +1,12 @@
 <audio-viz scene-init="scene_init" render="render"></audio-viz>
 <div class="sidebar left-lower side-buttons-container">
-  <folder title="Controls" open>
-    <slider name="size" model="modelOpts.size" from="1" to="100" step="1"></slider>
+  <folder title="Controls">
+    <slider name="size" model="modelOpts.size" from="1" to="128" step="1"></slider>
     <slider name="smoothness" model="modelOpts.smoothness" from="0" to="3" step="0.01"></slider>
     <slider name="zScale" model="modelOpts.zScale" from="50" to="1000" step="5"></slider>
+  </folder>
+  <folder title="Beat detection">
+    <slider name="Beat detection treshold" model="Dancer.treshold" from="0" to="1" step="0.01"></slider>
+    <slider name="Beat detection decay factor" model="Dancer.decay_factor" from="0" to="1" step="0.01"></slider>
   </folder>
 </div>

@@ -23,7 +23,8 @@ angular.module('audioVizApp')
       if( Detector.webgl ){
         renderer = new THREE.WebGLRenderer({
           antialias   : true, // to get smoother output
-          preserveDrawingBuffer : true  // to allow screenshot
+          preserveDrawingBuffer : true,  // to allow screenshot
+          maxLights: 50
         });
       } else {
         Detector.addGetWebGLMessage();

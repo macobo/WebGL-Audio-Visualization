@@ -14,9 +14,10 @@ angular.module('audioVizApp')
         CONVERSION_COEFFICIENT = 0.93;
     var service = {
       frequency_range: [0, 50],
-      treshold: 0.2,
-      current_treshold: 0.2,
+      treshold: 0.1,
+      current_treshold: 0.1,
       decay: 0.02,
+      decay_factor: 0.93,
       is_beat: false
     };
 
@@ -47,14 +48,19 @@ angular.module('audioVizApp')
       return fft.spectrum;
     };
 
+    var decay = function() {
+      service.current_treshold *= service.decay_factor;
+    };
+
     var updateIsBeat = function() {
       var magnitude = service.maxAmplitude(service.frequency_range);
-      console.log(service.is_beat, magnitude, service.treshold);
+      //console.log(service.is_beat, magnitude, service.treshold);
       if (magnitude >= service.current_treshold && magnitude >= service.treshold) {
         service.current_treshold = magnitude;
         service.is_beat = true;
       } else {
-        service.current_treshold -= service.decay;
+        //service.current_treshold -= service.decay;
+        decay();
         service.is_beat = false;
       }
     };

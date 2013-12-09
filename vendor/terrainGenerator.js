@@ -312,7 +312,6 @@
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         mesh.geometry.dynamic = true;
-        console.log(mesh.geometry.faces[0]);
         mesh.geometry.colorsNeedUpdate = true;
 
         var vertices = mesh.geometry.vertices;
@@ -323,6 +322,36 @@
         }
 
         return mesh;
+    };
+
+    function getPeaks(model, delta) {
+      delta = delta || 3;
+      var is_peak = [];
+      var rows = model.length, cols = model[0].length;
+      var r, c, nr, nc, p;
+      for (r = 0; r < rows; r++) {
+        is_peak.push([])
+        for (c = 0; c < cols; c++) {
+          var peak = true;
+          if (r >= delta && c >= delta) {
+            for (nr = r - delta; nr < r; nr++)
+              for (nc = c - delta; nc < c; nc++) {
+                p = model[r][c] > model[nr][nc];
+                peak = peak && p;
+                is_peak[nr][nc] = is_peak[nr][nc] && !p;
+              }
+          }
+          is_peak[r].push(peak);
+        }
+      }
+      var result = [];
+      for (r = delta; r < rows-delta; r++) {
+        for (c = delta; c < cols-delta; c++) {
+          if (is_peak[r][c])
+            result.push([r, c]);
+        }
+      }
+      return result;
     }
 
 
@@ -330,5 +359,6 @@
     window.generateTerrain = generateTerrain;
     window.getTerrainMesh = getTerrainMesh;
     window.getOptimalSegLength = getOptimalSegLength;
+    window.getPeaks = getPeaks;
 
 }).call(this);
