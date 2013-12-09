@@ -60,41 +60,25 @@ angular.module('audioVizApp')
       var values_size = attributes.size.value;
       var values_color = attributes.pcolor.value;
 
-
-      var hue = 0, timeOnShapePath = 0;
+      var hue = 0;
 
       var setTargetParticle = function() {
-
         var target = Pool.get();
         values_size[ target ] = Math.random() * 200 + 100;
-
         return target;
-
       };
 
       var onParticleCreated = function( p ) {
-
         var position = p.position;
         p.target.position = position;
-
         var target = p.target;
 
         if ( target ) {
-
-          // console.log(target,particles.vertices[target]);
-          // values_size[target]
-          // values_color[target]
-
           hue += 0.0003 * 1.0;
           if ( hue > 1 ) hue -= 1;
-
           particles.vertices[ target ] = p.position;
-
           values_color[ target ].setHSL( hue, 0.6, 0.1 );
-
-          pointLight.color.setHSL( hue, 0.8, 0.5 );
         }
-
       };
 
       var onParticleDead = function( particle ) {
@@ -123,8 +107,8 @@ angular.module('audioVizApp')
       emitter.addAction( new SPARKS.Move() );
       emitter.addAction( new SPARKS.RandomDrift( 90, 100, 2000 ) );
 
-      emitter.addCallback( "created", onParticleCreated );
-      emitter.addCallback( "dead", onParticleDead );
+      emitter.addCallback( 'created', onParticleCreated );
+      emitter.addCallback( 'dead', onParticleDead );
       emitter.start();
     };
 
@@ -133,10 +117,7 @@ angular.module('audioVizApp')
       group = new THREE.Object3D();
       scene.add(group);
       for (var i = 0; i < $scope.particles.count; i++) {
-        var x = Math.random() * 200 - 100;
-        var y = Math.random() * 100 + 150;
-        var z = Math.random() * 50;
-        particles.vertices.push(new THREE.Vector3(x, y, z));
+        particles.vertices.push(new THREE.Vector3(0, 0, 0));
         Pool.add(i);
       }
 
@@ -213,31 +194,11 @@ angular.module('audioVizApp')
     };
 
     function generateSprite() {
-
       var canvas = document.createElement( 'canvas' );
       canvas.width = 128;
       canvas.height = 128;
 
       var context = canvas.getContext( '2d' );
-
-
-      // Just a square, doesnt work too bad with blur pp.
-      // context.fillStyle = "white";
-      // context.strokeStyle = "white";
-      // context.fillRect(0, 0, 63, 63) ;
-
-      // Heart Shapes are not too pretty here
-      // var x = 4, y = 0;
-      // context.save();
-      // context.scale(8, 8); // Scale so canvas render can redraw within bounds
-      // context.beginPath();
-      // context.bezierCurveTo( x + 2.5, y + 2.5, x + 2.0, y, x, y );
-      // context.bezierCurveTo( x - 3.0, y, x - 3.0, y + 3.5,x - 3.0,y + 3.5 );
-      // context.bezierCurveTo( x - 3.0, y + 5.5, x - 1.0, y + 7.7, x + 2.5, y + 9.5 );
-      // context.bezierCurveTo( x + 6.0, y + 7.7, x + 8.0, y + 5.5, x + 8.0, y + 3.5 );
-      // context.bezierCurveTo( x + 8.0, y + 3.5, x + 8.0, y, x + 5.0, y );
-      // context.bezierCurveTo( x + 3.5, y, x + 2.5, y + 2.5, x + 2.5, y + 2.5 );
-
       context.beginPath();
       context.arc( 64, 64, 60, 0, Math.PI * 2, false) ;
 
