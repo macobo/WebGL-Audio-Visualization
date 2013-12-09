@@ -37,6 +37,11 @@ angular.module('audioVizApp', ['ngRoute', 'ngAnimate'])
         controller: 'Terrain',
         AnimName: 'Terrain'
       })
+      .when('/particles', {
+        template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
+        controller: 'Particles',
+        AnimName: 'Particles'
+      })
       .otherwise({
         redirectTo: '/'
       });
