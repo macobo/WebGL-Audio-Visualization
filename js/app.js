@@ -38,7 +38,7 @@ angular.module('audioVizApp', ['ngRoute', 'ngAnimate'])
         AnimName: 'Terrain'
       })
       .when('/particles', {
-        template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
+        templateUrl: 'views/particles.html',
         controller: 'Particles',
         AnimName: 'Particles'
       })

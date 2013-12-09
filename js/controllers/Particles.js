@@ -1,6 +1,21 @@
 'use strict';
 /* global SPARKS */
 
+var updaterObject = function(updater_func, update_type) {
+  var Obj = function() {
+    this[update_type] = updater_func;
+  };
+  return new Obj();
+};
+
+var addInitializer = function(emitter, init_func) {
+  emitter.addInitializer(updaterObject(init_func, 'initialize'));
+};
+var addAction = function(emitter, init_func) {
+  emitter.addAction(updaterObject(init_func, 'update'));
+};
+
+
 angular.module('audioVizApp')
   .controller('Particles', function($scope, AudioService, Dancer) {
     $scope.Dancer = Dancer;
@@ -15,25 +30,9 @@ angular.module('audioVizApp')
       count: 75000
     };
 
-    var Pool = {
-      __pools: [],
-      // Get a new Vector
-      get: function() {
-        if ( this.__pools.length > 0 ) {
-          return this.__pools.pop();
-        }
-        console.log( "pool ran out!" )
-        return null;
-      },
-      // Release a vector back into the pool
-      add: function( v ) {
-        this.__pools.push( v );
-      }
-    };
-
 
     var scene, camera, attributes, uniforms, particleCloud, group, particles;
-    var emitter, pointLight;
+    var emitter, pointLight, emitter_position;
     $scope.scene_init = function(renderer, width, height) {
       scene = new THREE.Scene();
       camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2000 );
@@ -74,7 +73,7 @@ angular.module('audioVizApp')
         var target = p.target;
 
         if ( target ) {
-          hue += 0.0003 * 1.0;
+          hue += 0.003 * 1.0;
           if ( hue > 1 ) hue -= 1;
           particles.vertices[ target ] = p.position;
           values_color[ target ].setHSL( hue, 0.6, 0.1 );
@@ -92,11 +91,19 @@ angular.module('audioVizApp')
         }
       };
 
-      var start_position = new THREE.Vector3(0, 0, 0);
-      emitter = new SPARKS.Emitter(new SPARKS.SteadyCounter(50));
-      emitter.addInitializer( new SPARKS.Position( new SPARKS.PointZone(start_position) ) );
+      var emitter_position = new THREE.Vector3(0, 0, 0);
+      emitter = new SPARKS.Emitter(new RythmCounter());
+      addInitializer(emitter, function(emitter, particle) {
+        var pos = emitter_position;
+        particle.position.set(pos.x, pos.y, pos.z);
+      });
+
       emitter.addInitializer( new SPARKS.Lifetime( 1, 15 ));
       emitter.addInitializer( new SPARKS.Target( null, setTargetParticle ) );
+      addInitializer(emitter, function(e, particle) {
+        var d = Dancer.is_beat ? 200 : 200;
+        values_size[particle.target] = Math.random() * d + 100;
+      });
 
 
       emitter.addInitializer( new SPARKS.Velocity( new SPARKS.PointZone( new THREE.Vector3( 0, -5, 1 ) ) ) );
@@ -105,14 +112,30 @@ angular.module('audioVizApp')
       emitter.addAction( new SPARKS.Age() );
       emitter.addAction( new SPARKS.Accelerate( 0, 0, -50 ) );
       emitter.addAction( new SPARKS.Move() );
-      emitter.addAction( new SPARKS.RandomDrift( 90, 100, 2000 ) );
+      emitter.addAction( new SPARKS.RandomDrift( 1000, 100, 2000 ) );
 
       emitter.addCallback( 'created', onParticleCreated );
       emitter.addCallback( 'dead', onParticleDead );
       emitter.start();
     };
 
+    var RythmCounter = function() {
+      this.leftover = 0;
+      this.rate = 10;
+      this.updateEmitter = function(emitter, time) {
+        var rate = Dancer.is_beat ? 100 : 1;
+        var targetRelease = time * rate + this.leftover;
+        var actualRelease = Math.floor(targetRelease);
+
+        this.leftover = targetRelease - actualRelease;
+
+        return actualRelease;
+      }
+    };
+
+
     var initParticles = function() {
+      // sets up three.js side of things, the passing of values to shader.
       particles = new THREE.Geometry();
       group = new THREE.Object3D();
       scene.add(group);
@@ -220,4 +243,19 @@ angular.module('audioVizApp')
       return canvas;
 
     }
+
+    var Pool = {
+      __pools: [],
+      // Get a new Vector
+      get: function() {
+        if ( this.__pools.length > 0 ) {
+          return this.__pools.pop();
+        }
+        console.error( "pool ran out!");
+      },
+      // Release a vector back into the pool
+      add: function( v ) {
+        this.__pools.push( v );
+      }
+    };
   });
