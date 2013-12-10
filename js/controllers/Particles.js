@@ -144,18 +144,23 @@
 angular.module('audioVizApp')
   .service('BeatCounter', function(Dancer) {
     return function(length) {
-      var cache = {}, at = 0, count = 0;
+      var cache = {}, at = 0, count = 0, done = false;
       var result = {};
       result.tick = function() {
         var beat = Dancer.is_beat;
         if (beat) count++;
-        if (cache.length >= length && cache[at])
+        if (done && cache[at])
           count--;
         cache[at] = Dancer.is_beat;
         at = (at+1) % length;
+        done = done || (at == 0);
       };
       result.count = function() {
         return count;
+      };
+      result.percentage = function() {
+        if (!done) return count / at;
+        return count / length;
       };
 
       return result;
@@ -175,9 +180,10 @@ angular.module('audioVizApp')
     };
 
 
-    var scene, camera, attributes, uniforms, particleCloud, particles, Pool;
+    var scene, camera, attributes, uniforms, particleCloud, particles, Pool, beat_counter;
     var emitter, pointLight, emitter_position;
     $scope.scene_init = function(renderer, width, height) {
+      beat_counter = BeatCounter(60);
       scene = new THREE.Scene();
       camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2000 );
       camera.position.set( 0, 150, 400 );
@@ -231,7 +237,7 @@ angular.module('audioVizApp')
         var target = p.target;
 
         if ( target ) {
-          hue += 0.003 * 1.0;
+          hue += 0.009 * 1.0;
           if ( hue > 1 ) hue -= 1;
 
           particles.vertices[ target ] = p.position;
@@ -261,21 +267,45 @@ angular.module('audioVizApp')
         particle.position.set(x, y, z);
       });
 
-      emitter.addInitializer( new SPARKS.Lifetime( 3, 5 ));
+      emitter.addInitializer( new SPARKS.Lifetime( 3, 10 ));
       emitter.addInitializer( new SPARKS.Target( null, setTargetParticle ) );
       addInitializer(emitter, function(e, particle) {
         var d = Dancer.is_beat ? 200 : 200;
         //values_size[particle.target] = Math.random() * d + 100;
+        var drift = new THREE.Vector3(1000, 1000, 1000);
+        particle.acceleration = new THREE.Vector3(
+          2*(Math.random() - 0.5), 2*(Math.random() - 0.5), 2*(Math.random() - 0.5)
+        );
+        particle.acceleration.multiply(drift);
       });
 
 
-      emitter.addInitializer( new SPARKS.Velocity( new SPARKS.PointZone( new THREE.Vector3( 0, -5, 1 ) ) ) );
+      emitter.addInitializer( new SPARKS.Velocity(
+        new SPARKS.PointZone( new THREE.Vector3( 0, -5, 1 ) ) ) );
       // TOTRY Set velocity to move away from centroid
 
       emitter.addAction( new SPARKS.Age() );
-      emitter.addAction( new SPARKS.Accelerate( 0, 0, -50 ) );
+      addAction(emitter, function(e, particle, time) {
+        var acc = particle.acceleration;
+
+        var v = particle.velocity;
+
+        particle._oldvelocity.set(v.x, v.y, v.z);
+
+        v.x += acc.x * time;
+        v.y += acc.y * time;
+        v.z += acc.z * time;
+      });
+
+      //emitter.addAction( new SPARKS.Accelerate( 0, 0, 50 ) );
       emitter.addAction( new SPARKS.Move() );
-      emitter.addAction( new SPARKS.RandomDrift( 10000, 1000, 20000 ) );
+      addAction(emitter, function(e, particle, time) {
+        var p = beat_counter.percentage(),
+            v = particle.velocity,
+            new_speed = p * 3000 + 100;
+        v.setLength(new_speed);
+      });
+      emitter.addAction( new SPARKS.RandomDrift( 100, 100, 100 ) );
 
       emitter.addCallback( 'created', onParticleCreated );
       emitter.addCallback( 'dead', onParticleDead );
@@ -286,7 +316,8 @@ angular.module('audioVizApp')
       this.leftover = 0;
       this.rate = 10;
       this.updateEmitter = function(emitter, time) {
-        var rate = Dancer.is_beat ? 50 : 1;
+        var rate = beat_counter.percentage() * 40 + 3;
+        if (Dancer.is_beat) rate += 30;
         var targetRelease = time * rate + this.leftover;
         var actualRelease = Math.floor(targetRelease);
 
@@ -297,6 +328,8 @@ angular.module('audioVizApp')
 
 
     $scope.render = function(renderer, time_delta) {
+      beat_counter.tick();
+
       particleCloud.geometry.verticesNeedUpdate = true;
 
       attributes.size.needsUpdate = true;
