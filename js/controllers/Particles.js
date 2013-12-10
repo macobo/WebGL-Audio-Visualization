@@ -142,7 +142,26 @@
 })();
 
 angular.module('audioVizApp')
-  .controller('Particles', function($scope, AudioService, Dancer) {
+  .service('BeatCounter', function(Dancer) {
+    return function(length) {
+      var cache = {}, at = 0, count = 0;
+      var result = {};
+      result.tick = function() {
+        var beat = Dancer.is_beat;
+        if (beat) count++;
+        if (cache.length >= length && cache[at])
+          count--;
+        cache[at] = Dancer.is_beat;
+        at = (at+1) % length;
+      };
+      result.count = function() {
+        return count;
+      };
+
+      return result;
+    };
+  })
+  .controller('Particles', function($scope, AudioService, Dancer, BeatCounter) {
     $scope.Dancer = Dancer;
 
     $scope.camera = {

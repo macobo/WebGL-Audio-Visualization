@@ -100,6 +100,10 @@ angular.module('audioVizApp')
       zScale: 200
     };
 
+    $scope.anim = {
+      switchEveryBeat: false
+    };
+
     $scope.scene_init = function(renderer, width, height) {
       scene = new THREE.Scene();
 
@@ -149,12 +153,12 @@ angular.module('audioVizApp')
       sinceLastChange += time_delta;
 
       var spectrum = AudioService.spectrum();
-      if (Dancer.is_beat) {
-        renderer.clear();
-        return;
-      }
+      //if (Dancer.is_beat) { 
+        //renderer.clear();
+        //return;
+      //}
 
-      if (sinceLastChange >= SWITCH_FREQUENCY) {
+      if ((sinceLastChange >= SWITCH_FREQUENCY || $scope.anim.switchEveryBeat) && Dancer.is_beat) {
         console.log('Switching layout', sinceLastChange);
         sinceLastChange = 0;
         $scope.model.generateNextTarget();

@@ -4,7 +4,13 @@
     <slider name="size" model="modelOpts.size" from="1" to="128" step="1"></slider>
     <slider name="smoothness" model="modelOpts.smoothness" from="0" to="3" step="0.01"></slider>
     <slider name="zScale" model="modelOpts.zScale" from="50" to="1000" step="5"></slider>
+  
+    <div>
+      Switch layout every beat:
+      <input type="checkbox" ng-model="anim.switchEveryBeat">
+    </div>
   </folder>
+
   <folder title="Beat detection">
     <slider name="Beat detection treshold" model="Dancer.treshold" from="0" to="1" step="0.01"></slider>
     <slider name="Beat detection decay factor" model="Dancer.decay_factor" from="0" to="1" step="0.01"></slider>
