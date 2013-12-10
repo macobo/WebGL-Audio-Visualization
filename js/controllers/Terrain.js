@@ -1,5 +1,7 @@
 'use strict';
 
+/* global getPeaks, getTerrainMesh, generateTerrain, SPARKS */
+
 _.sum = function(arr) { return _.reduce(arr, function(a, b) { return a+b; }, 0); };
 _.average = function(arr) { return _.sum(arr) / arr.length; };
 _.clamp = function(value, min, max) { return Math.min(max, Math.max(min, value)); };
@@ -72,13 +74,18 @@ angular.module('audioVizApp')
         since_blend_start = 0;
       };
 
-      service.peaks = peaks;
-      service.peakPosition = function(peak) {
-        var size = model.length;
-        var i = peak[0]*size+peak[1];
-        window.mesh = blank_mesh;
-        console.log(i, size, blank_mesh.geometry.vertices.length, blank_mesh.geometry.vertices[i]);
-        return blank_mesh.geometry.vertices[i];
+      //service.peaks = peaks;
+      service.nthPeakPosition = function(n) {
+        var peak = peaks[n];
+        //peak = [0, 0];
+        var index = peak[0] * target_model.length + peak[1];
+        //console.log(index, blank_mesh.geometry.vertices[index]);
+        var pos = blank_mesh.geometry.vertices[index];
+        // don't even ask. -.-
+        return new THREE.Vector3(pos.x, pos.z * prevZ, pos.y);
+      };
+      service.randomPeak = function() {
+        return service.nthPeakPosition(Math.floor(Math.random() * peaks.length));
       };
 
       return service;
@@ -112,6 +119,7 @@ angular.module('audioVizApp')
       $scope.model = TerrainModel.new($scope.modelOpts);
       mesh = $scope.model.getMesh($scope.modelOpts.zScale);
       setupLights();
+      setupEmitter();
       scene.add(mesh);
       console.log(mesh);
     };
@@ -130,18 +138,88 @@ angular.module('audioVizApp')
       auxLight.castShadow = true;
       scene.add(auxLight);
     }
+
+    var emitterPosition = new THREE.Vector3(0, 0, 0), ee, emitter;
+    var particleSystem = new (function() {
+      this.to_emit = 100;
+      this.rate = 1000;
+      this.add = function(amount) { this.to_emit += amount; };
+      this.setRate = function(amount) { this.rate = amount; };
+      this.updateEmitter = function(emitter, time) {
+        var amount = Math.min(Math.floor(this.rate * time), this.to_emit);
+        if (this.to_emit-amount > 0 && amount) {
+          this.to_emit -= amount;
+          //console.log(time, amount, this.to_emit);
+          return amount;
+        }
+        return 0;
+      };
+    })();
+
+    function setupEmitter() {
+      ee = prepareParticleGeometry(10000);
+      scene.add(ee.particleCloud);
+
+      var vertices = ee.particleCloud.geometry.vertices;
+      var values_size = ee.attributes.size.value;
+      var values_color = ee.attributes.pcolor.value;
+      console.log(ee, values_size.length);
+
+      var emitter = new SPARKS.Emitter(particleSystem);
+      addInitializer(emitter, function(e,p) {
+        var pos = $scope.model.randomPeak();
+        p.position.set(pos.x, pos.y, pos.z * 2000);
+      });
+      emitter.addInitializer( new SPARKS.Lifetime( 3, 5 ));
+      emitter.addInitializer( new SPARKS.Target(null, function() {
+        var target = ee.Pool.get();
+        values_size[ target ] = Math.random() * 100 + 1;
+        return target;
+      }));
+
+      emitter.addAction( new SPARKS.Age() );
+      //emitter.addAction( new SPARKS.Accelerate( 0, 0, -50 ) );
+      emitter.addAction( new SPARKS.Move() );
+      //emitter.addAction( new SPARKS.RandomDrift( 10, 10, 10 ) );
+
+      var hue = 0;
+      emitter.addCallback( 'created', function( p ) {
+        var position = p.position;
+        p.target.position = position;
+        var target = p.target;
+        if ( target ) {
+          hue += 0.003 * 1.0;
+          if ( hue > 1 ) hue -= 1;
+          ee.particles.vertices[ target ] = p.position;
+          values_color[ target ].setHSL( hue, 0.6, 0.1 );
+        }
+      });
+      emitter.addCallback( 'dead', function( particle ) {
+        var target = particle.target;
+        if ( target ) {
+          // Hide the particle
+          ee.attributes.pcolor.value[ target ].setRGB( 0, 0, 0 );
+          ee.particles.vertices[ target ].set( Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY );
+          // Mark particle system as available by returning to pool
+          ee.Pool.add( particle.target );
+        }
+      });
+      emitter.start();
+    }
   
     var sinceLastChange = 0;
     $scope.render = function(renderer, time_delta) {
-      var timer = new Date().getTime() * 0.0001;
-      camera.position.x = Math.cos(timer) * 800;
-      camera.position.z = Math.sin(timer) * 200;
+      // var timer = new Date().getTime() * 0.0001;
+      // camera.position.x = Math.cos(timer) * 800;
+      // camera.position.z = Math.sin(timer) * 200;
+      camera.position.x = 800;
+      camera.position.z = 200;
       camera.lookAt(scene.position);
 
       $scope.model.update($scope.modelOpts, time_delta);
       //scene.remove(mesh);
       var new_mesh = $scope.model.getMesh($scope.modelOpts.zScale);
-      if (new_mesh.uuid != mesh.uuid) {
+      if (new_mesh.uuid !== mesh.uuid) {
         scene.remove(mesh);
         mesh = new_mesh;
         scene.add(mesh);
@@ -150,7 +228,10 @@ angular.module('audioVizApp')
 
       var spectrum = AudioService.spectrum();
       if (Dancer.is_beat) {
+        particleSystem.add(100);
         renderer.clear();
+        //emitterPosition = $scope.model.randomPeak();
+        //console.log($scope.model.nthPeakPosition(0));
         return;
       }
 
@@ -160,6 +241,11 @@ angular.module('audioVizApp')
         $scope.model.generateNextTarget();
       }
       $scope.modelOpts.zScale = Math.min(1000, 1000 * AudioService.volume());
+
+      //particles
+      ee.particleCloud.geometry.verticesNeedUpdate = true;
+      ee.attributes.size.needsUpdate = true;
+      ee.attributes.pcolor.needsUpdate = true;
 
       renderer.clear();
       renderer.render(scene, camera);

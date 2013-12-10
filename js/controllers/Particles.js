@@ -59,7 +59,7 @@
       if ( this.__pools.length > 0 ) {
         return this.__pools.pop();
       }
-      console.error( "pool ran out!");
+      console.error("pool ran out!");
     },
     // Release a vector back into the pool
     add: function( v ) {
