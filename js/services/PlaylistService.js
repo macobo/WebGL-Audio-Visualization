@@ -32,9 +32,12 @@ angular.module('audioVizApp')
         //console.log("update");
       };
 
+      service.loading = true;
       SC.stream('/tracks/'+id, options, function(_sound) {
         sound = _sound;
+        console.log("LOADED", id);
         //sound.play();
+        service.loading = false;
         deferred.resolve(sound);
       });
       return deferred.promise;
@@ -52,6 +55,7 @@ angular.module('audioVizApp')
       play: play_song,
       stop: stop_current,
       sound: function() { return sound; },
+      loading: false
     };
 
     return service;

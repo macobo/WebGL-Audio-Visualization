@@ -3,10 +3,15 @@
 angular.module('audioVizApp', ['ngRoute', 'ngAnimate'])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/', {
-        template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
-        controller: 'FirstViz',
-        AnimName: 'Torus'
+      .when('/particles', {
+        templateUrl: 'views/particles.html',
+        controller: 'Particles',
+        AnimName: 'Particles'
+      })
+     .when('/terrain', {
+        templateUrl: 'views/terrain.html',
+        controller: 'Terrain',
+        AnimName: 'Terrain'
       })
 	   .when('/angels', {
         template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
@@ -32,17 +37,12 @@ angular.module('audioVizApp', ['ngRoute', 'ngAnimate'])
           params: function() { return { step: 1 }; }
         }
       })
-     .when('/terrain', {
-        templateUrl: 'views/terrain.html',
-        controller: 'Terrain',
-        AnimName: 'Terrain'
-      })
-      .when('/particles', {
-        templateUrl: 'views/particles.html',
-        controller: 'Particles',
-        AnimName: 'Particles'
+      .when('/torus', {
+        template: '<audio-viz scene-init="scene_init" render="render"></audio-viz>',
+        controller: 'FirstViz',
+        AnimName: 'Torus'
       })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/particles'
       });
   });

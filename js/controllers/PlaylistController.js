@@ -10,10 +10,12 @@ angular.module('audioVizApp')
     });
 
     $scope.setTrack = function(index) {
-      PlaylistService.stop();
-      PlaylistService.play(index, {onfinish: $scope.nextTrack});
-      $scope.current_track = $scope.tracks[index];
-      $scope.current_index = index;
+      if (!PlaylistService.loading) {
+        PlaylistService.stop();
+        PlaylistService.play(index, {onfinish: $scope.nextTrack});
+        $scope.current_track = $scope.tracks[index];
+        $scope.current_index = index;
+      }
     };
 
     $scope.nextTrack = function() {

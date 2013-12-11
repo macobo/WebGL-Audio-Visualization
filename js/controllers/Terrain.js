@@ -110,9 +110,9 @@ angular.module('audioVizApp')
       camera = new THREE.PerspectiveCamera($scope.camera.fov, width / height,
         $scope.camera.near, $scope.camera.far);
       camera.position.y = 400;
-      
+
       // transparently support window resize
-      THREEx.WindowResize.bind(renderer, camera);
+      //THREEx.WindowResize.bind(renderer, camera);
 
       composer = new THREE.EffectComposer( renderer );
       renderer.autoClear = false;
