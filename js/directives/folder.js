@@ -6,11 +6,11 @@ angular.module('audioVizApp')
     };
 
     return {
-      template: '<div class="folder button">' +
+      template: '<div class="folder button ">' +
                   '<div class="bg">' +
                     '<ul>' +
                       '<li class="title" ng-class="{open:open}" ng-click="open=!open">{{title}}</li>' +
-                      '<li class="content" ng-transclude ng-show="open" ng-animate="\'collapse\'"></li>' +
+                      '<li class="content box" ng-transclude ng-show="open"></li>' +
                     '</ul>' +
                   '</div></div>',
       restrict: 'E',

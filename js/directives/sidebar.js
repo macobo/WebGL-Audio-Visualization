@@ -8,7 +8,7 @@ angular.module('audioVizApp')
     };
     return {
       template: '<div class="sidebar side-buttons-container">' +
-                  '<div class="content box" ng-transclude  ng-hide="isclosed"">' +
+                  '<div class="content box" ng-transclude ng-hide="isclosed"">' +
                   '</div>' +
                   '<div class="button toggle">' +
                     '<a ng-click="toggle()" href="" ng-show="canClose && !isclosed">hide sidebar</a>' +
