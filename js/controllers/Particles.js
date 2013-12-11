@@ -179,7 +179,7 @@ angular.module('audioVizApp')
       count: 75000
     };
 
-
+    var composer;
     var scene, camera, attributes, uniforms, particleCloud, particles, Pool, beat_counter;
     var emitter, pointLight, emitter_position;
     $scope.scene_init = function(renderer, width, height) {
@@ -190,7 +190,7 @@ angular.module('audioVizApp')
       camera.lookAt( scene.position );
       renderer.setClearColor(0x000000);
 
-      
+
       // transparently support window resize
       THREEx.WindowResize.bind(renderer, camera);
 
@@ -215,6 +215,19 @@ angular.module('audioVizApp')
 
       scene.add(particleCloud);
       initEmitters();
+
+      composer = new THREE.EffectComposer(renderer);
+      renderer.autoClear = false;
+
+      var renderModel = new THREE.RenderPass(scene, camera);
+      composer.addPass(renderModel);
+
+      var effectBloom = new THREE.BloomPass(1.5);
+      composer.addPass(effectBloom);
+
+      var effectScreen= new THREE.ShaderPass(THREE.ShaderExtras[ "screen" ]);
+      effectScreen.renderToScreen = true;
+      composer.addPass(effectScreen);
     };
 
     var drift = function(base, distance) {
@@ -338,7 +351,10 @@ angular.module('audioVizApp')
 
       attributes.size.needsUpdate = true;
       attributes.pcolor.needsUpdate = true;
-      renderer.render(scene, camera);
+
+      renderer.clear();
+      //renderer.render(scene, camera);
+      composer.render();
     };
 
 
