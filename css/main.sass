@@ -1,3 +1,15 @@
+@mixin cubic_transition($duration: 0.5s)
+  -webkit-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) $duration
+  -moz-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) $duration
+  -o-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) $duration
+  transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) $duration
+
+@mixin ease_transition($duration: 0.5s)
+  -webkit-transition: all ease $duration
+  -moz-transition: all ease $duration
+  -o-transition: all ease $duration
+  transition: all ease $duration
+
 body
   overflow: hidden
   padding: 0
@@ -29,6 +41,19 @@ $border_color: rgb($border_d, $border_d, $border_d)
       font-size: 12px
       font-weight: 700
       background: rgb(0, 0, 0)
+      &.no_border
+        border-right: 0
+
+      &.right
+        float: right
+        border-left: 1px solid $border_color
+
+      &.logo a
+        padding-top: 5px
+        @include cubic_transition(0.3s)
+        &:hover
+          color: rgb(74, 190, 255)
+
   a
     //color: rgb(119, 119, 119)
     color: white
@@ -195,7 +220,7 @@ spectrum
 
 .box
   &.ng-hide-add, &.ng-hide-remove
-    transition: all ease .3s
+    @include ease_transition(0.3s)
     display: block !important
     overflow: hidden
 
@@ -210,13 +235,6 @@ spectrum
   &.ng-hide-remove.ng-hide-remove-active
     max-height: 500px
     opacity: 1
-
-
-@mixin cubic_transition 
-  -webkit-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
-  -moz-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
-  -o-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
-  transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
 
 
 .slide-left-animation

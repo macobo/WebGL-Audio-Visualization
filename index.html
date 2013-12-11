@@ -5,8 +5,8 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link href="css/main.css" rel="stylesheet"/>
-		<link href="css/animate.css" rel="stylesheet"/>
 		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Terminal+Dosis:300,500,700">
+		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	</head>
 <body ng-controller="MainController">
 	<sidebar closable class="top">
@@ -53,6 +53,10 @@
 			</li>
 			<li>
 				<a ng-href="#{{next.href}}" class="nav-button" ng-click="slideAnim = 'slide-left-animation'">→</a>
+			</li>
+
+			<li class="right logo">
+				<a href="https://github.com/macobo/WebGL-Audio-Visualization"class="fa fa-github fa-3x"></a>
 			</li>
 		</ul>
 	</div>
