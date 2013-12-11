@@ -44,7 +44,7 @@
 				<a>Audio visualization</a>
 			</li>
 			<li>
-				<a ng-href="#{{prev.href}}" ng-click="slideAnim = 'slide-left-animation'">←</a>
+				<a ng-href="#{{prev.href}}" ng-click="slideAnim = 'slide-right-animation'">←</a>
 			</li>
 			<li>
 				<a>Current animation:
@@ -52,7 +52,7 @@
 				({{ current.index }} / {{ links.length }})</a>
 			</li>
 			<li>
-				<a ng-href="#{{next.href}}" class="nav-button" ng-click="slideAnim = 'slide-right-animation'">→</a>
+				<a ng-href="#{{next.href}}" class="nav-button" ng-click="slideAnim = 'slide-left-animation'">→</a>
 			</li>
 		</ul>
 	</div>

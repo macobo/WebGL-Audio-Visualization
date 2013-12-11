@@ -32,8 +32,10 @@ angular.module('audioVizApp')
         Detector.addGetWebGLMessage();
         return true;
       }
-      console.log(element.width(), element.height())
-      renderer.setSize( element.width(), element.height() );
+      var width = element.width(), 
+          height = element.height();
+      console.log(width, height);
+      renderer.setSize(width, height);
       element.append(renderer.domElement);
 
       // add Stats.js - https://github.com/mrdoob/stats.js
@@ -63,7 +65,7 @@ angular.module('audioVizApp')
 
       var listener = $rootScope.$on('$routeChangeSuccess', function() {
         done = true;
-        console.log("cleaning up!");
+        console.log('cleaning up!');
         listener();
       });
     };

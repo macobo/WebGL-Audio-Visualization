@@ -190,6 +190,10 @@ angular.module('audioVizApp')
       camera.lookAt( scene.position );
       renderer.setClearColor(0x000000);
 
+      
+      // transparently support window resize
+      THREEx.WindowResize.bind(renderer, camera);
+
       var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
       directionalLight.position.set( 0, -1, 1 );
       directionalLight.position.normalize();
