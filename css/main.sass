@@ -7,10 +7,46 @@ body
   font-family: arial
   font-size: 100%
 
+$topbar_height: 42px
+$border_d: 30
+.topbar-container
+  background-color: rgba(0, 0, 0, 1)
+  font-family: 'Terminal Dosis', sans-serif
+  border-bottom: 1px solid rgb($border_d, $border_d, $border_d)
+  .topbar
+    height: $topbar_height
+    color: rgb(83, 80, 77)
+    line-height: 42px
+    width: 100%
+    margin: 0
+    padding: 0px
+    li
+      list-style: none
+      float: left
+      color: rgb(255, 255, 255)
+      border-right: 1px solid rgb($border_d, $border_d, $border_d)
+      font-size: 12px
+      font-weight: 700
+      background: rgb(0, 0, 0)
+  a
+    color: rgb(119, 119, 119)
+    text-decoration: none
+    text-transform: uppercase
+    letter-spacing: 2px
+    padding: 0 20px
+
+
+  .animName
+    font-weight: bolder
+    font-style: italic
+
+  .nav-button
+    padding: 20px 20px
+
 #info
   .top
     position: absolute
-    top: 0px
+    top: $topbar_height
     width: 100%
     padding: 5px
     text-align: center
@@ -35,7 +71,7 @@ body
   max-width: 300px
   min-width: 200px
   min-height: 100%
-  z-index: 5
+  z-index: 20000
   .toggle
     //float: right
     text-align: center
@@ -133,6 +169,8 @@ spectrum
   left: 0px
   bottom: 0px
   min-height: 0%
+.sidebar.top
+  top: $topbar_height
 
 .slider
   margin: 5px
@@ -165,26 +203,43 @@ spectrum
     opacity: 1
 
 
-.slide-animation
+@mixin cubic_transition 
+  -webkit-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
+  -moz-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
+  -o-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
+  transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
+
+
+.slide-left-animation
   &.ng-enter, &.ng-leave
-    -webkit-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
-    -moz-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
-    -o-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
-    transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
+    @include cubic_transition()
     position: absolute
-    top: 0
+    top: $topbar_height+1
     left: 0
     right: 0
     min-height: 1000px
   &.ng-enter
-    //opacity: 0
     left: 100%
     &.ng-enter-active
       left: 0
-      //opacity: 1
   &.ng-leave
     left: 0
-    //opacity: 1
     &.ng-leave-active
       left: -100%
-      //opacity: 0
+
+.slide-right-animation
+  &.ng-enter, &.ng-leave
+    @include cubic_transition()
+    position: absolute
+    top: $topbar_height+1
+    left: 0
+    right: 0
+    min-height: 1000px
+  &.ng-enter
+    left: -100%
+    &.ng-enter-active
+      left: 0%
+  &.ng-leave
+    left: 0%
+    &.ng-leave-active
+      left: 100%

@@ -6,9 +6,11 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link href="css/main.css" rel="stylesheet"/>
 		<link href="css/animate.css" rel="stylesheet"/>
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Terminal+Dosis:300,500,700">
 	</head>
 <body ng-controller="MainController">
-	<sidebar closable>
+	<sidebar closable class="top">
+	<!--
 		<folder title="Links" open>
 			<div class="links" ng-cloak>
 				<a ng-repeat="link in links" ng-href="#{{link.href}}" 
@@ -17,6 +19,7 @@
 				</a>
 			</div>
 		</folder>
+	-->
 		<folder title="Spectrum">
 			<spectrum data="audio.spectrum()"></spectrum>
 		</folder>
@@ -35,7 +38,25 @@
 	</sidebar>
 	
 	<!-- three.js container -->
-  <div id="container" ng-view class="slide-animation"></div>
+	<div class="topbar-container" ng-cloak>
+		<ul class="topbar">
+			<li>
+				<a>Audio visualization</a>
+			</li>
+			<li>
+				<a ng-href="#{{prev.href}}" ng-click="slideAnim = 'slide-left-animation'">←</a>
+			</li>
+			<li>
+				<a>Current animation:
+				<span class="animName">{{ current.AnimName }}</span>
+				({{ current.index }} / {{ links.length }})</a>
+			</li>
+			<li>
+				<a ng-href="#{{next.href}}" class="nav-button" ng-click="slideAnim = 'slide-right-animation'">→</a>
+			</li>
+		</ul>
+	</div>
+  <div id="container" ng-view ng-class="slideAnim"></div>
 	<!-- info on screen display -->
 	<div id="info">
 		<div class="bottom" id="inlineDoc" >

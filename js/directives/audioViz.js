@@ -1,15 +1,17 @@
 angular.module('audioVizApp')
-  .directive('audioViz', function (AudioService, $route) {
+  .directive('audioViz', function (AudioService, $route, $rootScope) {
     var renderer, stats, scene;
 
     var linker = function(scope, element, attrs) {
       var startRoute = $route.current;
       var clock = new THREE.Clock();
+      var done = false;
       var animationLoop = function() {
         // loop on request animation loop
         // - it has to be at the begining of the function
         // - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-        if (startRoute.$$hashKey != $route.current.$$hashKey) return;
+        //if (startRoute.$$hashKey != $route.current.$$hashKey) return;
+        if (done) return;
         requestAnimationFrame( animationLoop );
 
         // do the render
@@ -30,6 +32,7 @@ angular.module('audioVizApp')
         Detector.addGetWebGLMessage();
         return true;
       }
+      console.log(element.width(), element.height())
       renderer.setSize( element.width(), element.height() );
       element.append(renderer.domElement);
 
@@ -57,6 +60,12 @@ angular.module('audioVizApp')
       
       scope.sceneInit(renderer, element.width(), element.height());
       animationLoop();
+
+      var listener = $rootScope.$on('$routeChangeSuccess', function() {
+        done = true;
+        console.log("cleaning up!");
+        listener();
+      });
     };
 
     return {
