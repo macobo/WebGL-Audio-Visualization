@@ -44,19 +44,36 @@
 				<a>Audio visualization</a>
 			</li>
 			<li>
-				<a ng-href="#{{prev.href}}" ng-click="slideAnim = 'slide-right-animation'">←</a>
+				<a ng-href="#{{prev.href}}" class="blue-hover" title="previous animation"
+					ng-click="slideAnim = 'slide-right-animation'">
+					<i class="fa fa-arrow-left"></i>
+				</a>
 			</li>
 			<li>
-				<a>Current animation:
-				<span class="animName">{{ current.AnimName }}</span>
-				({{ current.index }} / {{ links.length }})</a>
+				<a href ng-click="showDropdown = !showDropdown" class="blue-hover">
+					Current animation:
+					<span class="animName">{{ current.AnimName }}</span>
+					({{ current.index }} / {{ links.length }})
+				</a>
+
+				<ul class="topbar dropdown links width-box" ng-show="showDropdown">
+					<li ng-repeat="link in links">
+						<a ng-href="#{{link.href}}" class="blue-hover"
+							 ng-class="{active: isActive(link)}">
+							{{ link.AnimName }}
+						</a>
+					</li>
+				</ul>
 			</li>
 			<li>
-				<a ng-href="#{{next.href}}" class="nav-button" ng-click="slideAnim = 'slide-left-animation'">→</a>
+				<a ng-href="#{{next.href}}" class="blue-hover right-border" title="next animation"
+					ng-click="slideAnim = 'slide-left-animation'">
+					<i class="fa fa-arrow-right"></i>
+				</a>
 			</li>
 
 			<li class="right logo">
-				<a href="https://github.com/macobo/WebGL-Audio-Visualization"class="fa fa-github fa-3x"></a>
+				<a href="https://github.com/macobo/WebGL-Audio-Visualization" class="fa fa-github fa-3x blue-hover"></a>
 			</li>
 		</ul>
 	</div>

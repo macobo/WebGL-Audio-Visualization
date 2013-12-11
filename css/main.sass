@@ -26,21 +26,23 @@ $border_color: rgb($border_d, $border_d, $border_d)
   background-color: rgba(0, 0, 0, 1)
   font-family: 'Terminal Dosis', sans-serif
   border-bottom: 1px solid $border_color
-  .topbar
+  ul.topbar
     height: $topbar_height
     //color: rgb(83, 80, 77)
     line-height: 42px
     width: 100%
     margin: 0
     padding: 0px
-    li
+    > li
       list-style: none
       float: left
       color: rgb(255, 255, 255)
-      border-right: 1px solid $border_color
+      border-left: 1px solid $border_color
+      //border-right: 1px solid $border_color
       font-size: 12px
       font-weight: 700
       background: rgb(0, 0, 0)
+      margin-left: -1px
       &.no_border
         border-right: 0
 
@@ -50,9 +52,6 @@ $border_color: rgb($border_d, $border_d, $border_d)
 
       &.logo a
         padding-top: 5px
-        @include cubic_transition(0.3s)
-        &:hover
-          color: rgb(74, 190, 255)
 
   a
     //color: rgb(119, 119, 119)
@@ -61,14 +60,25 @@ $border_color: rgb($border_d, $border_d, $border_d)
     text-transform: uppercase
     letter-spacing: 2px
     padding: 0 20px
+    display: block
 
 
   .animName
     font-weight: bolder
     font-style: italic
 
-  .nav-button
-    padding: 20px 20px
+  .dropdown
+    display: block
+    z-index: 1
+    //left: 100px
+    position: absolute
+    list-style: none
+    margin: 0px 0 0 0
+    li
+      border: 1px solid $border_color
+
+.right-border
+  border-right: 1px solid $border_color
 
 #info
   .top
@@ -84,9 +94,17 @@ $border_color: rgb($border_d, $border_d, $border_d)
       text-decoration: underline
   .bottom
     position: absolute
-    bottom: $topbar_height
+    bottom: 0
     right: 5px
     padding: 5px
+
+.blue-hover
+  @include cubic_transition(0.5s)
+  &:hover
+    color: rgb(74, 190, 255) !important
+  a:hover
+    color: rgb(74, 190, 255)
+
 
 .sidebar
   border-top: 1px solid $border_color
@@ -185,6 +203,7 @@ spectrum
     text-shadow: 0 0 0
     color: red
     font-weight: bold
+    text-decoration: none
 
 
 .links
@@ -193,11 +212,10 @@ spectrum
   a
     display: block
     color: white
-    padding-bottom: 3px
+    //padding-bottom: 3px
   a.active
-    color: red
-    text-decoration: underline
-    font-weight: bold
+    color: red !important
+    font-weight: bolder
 
 .sidebar.left-lower
   left: 0px
@@ -235,6 +253,24 @@ spectrum
   &.ng-hide-remove.ng-hide-remove-active
     max-height: 500px
     opacity: 1
+
+.width-box
+  &.ng-hide-add, &.ng-hide-remove
+    @include ease_transition(0.1s)
+    display: block !important
+    overflow: hidden
+
+  &.ng-hide-add
+    max-width: 500px
+    max-height: 500px
+
+  &.ng-hide-add.ng-hide-add-active, &.ng-hide-remove
+    max-width: 0px
+    max-height: 0px
+
+  &.ng-hide-remove.ng-hide-remove-active
+    max-width: 500px
+    max-height: 500px
 
 
 .slide-left-animation
