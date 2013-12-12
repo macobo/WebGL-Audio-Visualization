@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('audioVizApp')
-  .service('PlaylistService', function ($q, Dancer) {
+  .service('PlaylistService', function ($q, Dancer, $analytics) {
 
     SC.initialize({
       client_id: 'cbeb4fe25866e35cb329fa4acc298531',
@@ -21,6 +21,7 @@ angular.module('audioVizApp')
     var play_song = function(track_index, options) {
       var deferred = $q.defer();
       var id = playlist.tracks[track_index].id;
+      var title = playlist.tracks[track_index].title;
 
       options = options || {};
       options.autoPlay = true;
@@ -35,7 +36,8 @@ angular.module('audioVizApp')
       service.loading = true;
       SC.stream('/tracks/'+id, options, function(_sound) {
         sound = _sound;
-        console.log("LOADED", id);
+        //console.log("LOADED", id);
+        $analytics.eventTrack('PlayMusic', {  category: 'audio', label: title });
         //sound.play();
         service.loading = false;
         deferred.resolve(sound);

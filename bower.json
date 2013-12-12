@@ -17,6 +17,7 @@
     "threejs": "*",
     "threex": "*",
     "angular-route": "~1.2.3",
-    "angular-animate": "~1.2.3"
+    "angular-animate": "~1.2.3",
+    "angulartics": "~0.8.5"
   }
 }

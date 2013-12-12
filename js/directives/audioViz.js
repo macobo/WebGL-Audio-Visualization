@@ -34,7 +34,7 @@ angular.module('audioVizApp')
       }
       var width = element.width(), 
           height = element.height();
-      console.log(width, height);
+      //console.log(width, height);
       renderer.setSize(width, height);
       element.append(renderer.domElement);
 

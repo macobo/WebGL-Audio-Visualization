@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('audioVizApp', ['ngRoute', 'ngAnimate'])
+angular.module('audioVizApp', ['ngRoute', 'ngAnimate', 'angulartics', 'angulartics.google.analytics'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/particles', {
