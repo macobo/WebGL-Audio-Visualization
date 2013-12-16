@@ -4,7 +4,7 @@ WebGL-Audio-Visualization
 The demo can be accessed via: http://macobo.github.io/WebGL-Audio-Visualization/. Make sure you have WebGL and flash (for audio) enabled.
 
 ## Introduction
-
+
 This project is a collection of audio visualization animations made as a project for the course [Computer Graphics at University of Tartu](https://courses.cs.ut.ee/2013/cg/Main/Projects). 
 
 ## Results
@@ -54,7 +54,7 @@ A particle animation demonstrating the beat detection system. New particles appe
 
 ### Beat detection
 
-Beat detection sadly isn't very easy to do, especially in real-time. 
+Beat detection sadly isn't very easy to do, especially in real-time. One way to discover beats is to look at each at the sound frequency spectrum (the output of fast-fourier transform) and compare it to previous and future frames, looking whether it is peaking or not. The problem with doing that in real-time is that we don't have access to the future sound yet and have to resort to other crude heuristics.
 
 Our current solution is to use a decaying threshold. Each frame, the maximum value of the frequency spectrum is found (aka the maximal amplitude). That is compared to a threshold. 
 
