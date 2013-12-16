@@ -16,7 +16,8 @@ This project is a collection of audio visualization animations made as a project
 * [Angular.js](angularjs.com) - web library used, mainly used for structuring the application and for [ngAnimate](http://augus.github.io/ngAnimate/).
 * [DSP.js](https://github.com/corbanbrook/dsp.js/) - for fast-fourier transform used for audio analysis and beat detection.
 * [Sparks.js](https://github.com/zz85/sparks.js) - used for particle animations.
-* [Grunt (development server, SASS compiler)](http://gruntjs.com/), [Bower (dependency management)](http://bower.io/)
+* [Grunt](http://gruntjs.com/) - development server with live reload, SASS compiler
+* [Bower](http://bower.io/) - javascript dependency management
 
 ### Other
 
