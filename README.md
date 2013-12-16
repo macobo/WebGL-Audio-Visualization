@@ -13,9 +13,9 @@ This project is a collection of audio visualization animations made as a project
 
 * [Three.js](threejs.org) - javascript library that makes using [WebGL](http://en.wikipedia.org/wiki/WebGL) much easier.
 * [Soundcloud SDK](http://developers.soundcloud.com/docs/api/sdks) and [Soundmanager 2](http://developers.soundcloud.com/docs/api/sdks) - used to stream audio from a souncloud playlist to your browser.
-* [Angular.js](angularjs.com) - web library used, mainly used for structuring the application and for [ngAnimate](http://augus.github.io/ngAnimate/)
+* [Angular.js](angularjs.com) - web library used, mainly used for structuring the application and for [ngAnimate](http://augus.github.io/ngAnimate/).
 * [DSP.js](https://github.com/corbanbrook/dsp.js/) - for fast-fourier transform used for audio analysis and beat detection.
-* [Sparks.js](https://github.com/zz85/sparks.js) - used for particle animations
+* [Sparks.js](https://github.com/zz85/sparks.js) - used for particle animations.
 
 ### Other
 
