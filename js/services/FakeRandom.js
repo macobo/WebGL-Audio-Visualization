@@ -25,4 +25,16 @@ angular.module('audioVizApp')
       return service;
     };
     return { new: new_random };
+  })
+  .service('CircularBuffer', function() {
+    return function(data) {
+      this.data = data || [];
+
+      this.position = 0;
+      this.next = function() {
+        var result = this.data[this.position];
+        this.position = (this.position + 1) % this.data.length;
+        return result;
+      };
+    };
   });

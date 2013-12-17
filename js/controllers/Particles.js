@@ -186,7 +186,7 @@ angular.module('audioVizApp')
       beat_counter = BeatCounter(60);
       scene = new THREE.Scene();
       camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2000 );
-      camera.position.set( 0, 150, 400 );
+      camera.position.set( 0, 1000, 400 );
       camera.lookAt( scene.position );
       renderer.setClearColor(0x000000);
 
@@ -319,7 +319,7 @@ angular.module('audioVizApp')
       addAction(emitter, function(e, particle, time) {
         var p = beat_counter.percentage(),
             v = particle.velocity,
-            new_speed = p * 3000 + 100;
+            new_speed = Math.pow(p, 0.8) * 3000 + 100;
         v.setLength(new_speed);
       });
       emitter.addAction( new SPARKS.RandomDrift( 100, 100, 100 ) );
@@ -333,8 +333,8 @@ angular.module('audioVizApp')
       this.leftover = 0;
       this.rate = 10;
       this.updateEmitter = function(emitter, time) {
-        var rate = beat_counter.percentage() * 40 + 3;
-        if (Dancer.is_beat) rate += 30;
+        var rate = beat_counter.percentage() * 80 + 3;
+        if (Dancer.is_beat) rate += 90;
         var targetRelease = time * rate + this.leftover;
         var actualRelease = Math.floor(targetRelease);
 
