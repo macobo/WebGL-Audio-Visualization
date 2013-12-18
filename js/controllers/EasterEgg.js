@@ -11,9 +11,10 @@ angular.module('audioVizApp')
     $scope.textMeasurements = {
       text: 'THANK YOU',
       font: '93px ituner',
-      width: 6000,
+      width: 600,
       height: 100,
-      depth: 20
+      depth: 20,
+      displayTo: -300
     };
 
     $scope.particles = {
@@ -65,23 +66,23 @@ angular.module('audioVizApp')
         return new THREE.Vector3(y, x, z);
       });
 
-      counter.restore();
+      counter && counter.restore();
     }
 
     //reinitText();
-    $scope.$watch('textMeasurements.text', reinitText, true);
+    $scope.$watch('textMeasurements', reinitText, true);
 
     // particle engine stuff
 
     var composer;
     var scene, camera, attributes, uniforms, particleCloud, particles, Pool;
-    var emitter, pointLight, counter;
+    var emitter, pointLight, counter, material;
     $scope.scene_init = function(renderer, width, height) {
       scene = new THREE.Scene();
       //camera = new THREE.PerspectiveCamera( 70, width / height, 1, 2000 );
       camera = new THREE.PerspectiveCamera( 60, width/height, 1, 2000 );
       
-      camera.position.set( 0, 0, 290 );
+      camera.position.set( 0, 0, 350 );
       camera.lookAt( scene.position );
 
       // transparently support window resize
@@ -105,6 +106,7 @@ angular.module('audioVizApp')
       uniforms = a.uniforms;
       particles = a.particles;
       Pool = a.Pool;
+      material = a.shaderMaterial;
 
       scene.add(particleCloud);
       initEmitters();
@@ -172,9 +174,13 @@ angular.module('audioVizApp')
           drift(0, $scope.particles.box_size)
         );
         if (!gravity_coordinates.length) return;
-        var i = Math.floor(Math.random() * gravity_coordinates.length);
-        position = gravity_coordinates[i];
-        particle.position.set(position.x, position.y, position.z);
+        var a = false;
+        while (particle.position.x > $scope.textMeasurements.displayTo || !a) {
+          var i = Math.floor(Math.random() * gravity_coordinates.length);
+          position = gravity_coordinates[i];
+          particle.position.set(position.x, position.y, position.z);
+          a = true;
+        }
       });
       emitter.addInitializer( new SPARKS.Velocity( new SPARKS.PointZone(
         new THREE.Vector3(0, 0, 0) ) ) );
@@ -209,6 +215,7 @@ angular.module('audioVizApp')
 
       //emitter.addAction( new SPARKS.Accelerate( 0, 0, 50 ) );
       emitter.addAction( new SPARKS.Move() );
+      emitter.addAction( new SPARKS.RandomDrift( 100, 100, 100 ) );
 
       emitter.addCallback( 'created', onParticleCreated );
       emitter.addCallback( 'dead', onParticleDead );
@@ -225,5 +232,13 @@ angular.module('audioVizApp')
       renderer.clear();
       //renderer.render(scene, camera);
       composer.render();
+      if ($scope.textMeasurements.displayTo <  $scope.textMeasurements.width/2)
+        $scope.textMeasurements.displayTo += 10;
     };
+
+    $scope.$on('$destroy', function() {
+      console.log(scene);
+      particleCloud.geometry.dispose();
+      material.dispose();
+    });
   });

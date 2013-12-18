@@ -52,19 +52,21 @@
 
   }
 
-  var Pool = {
-    __pools: [],
-    // Get a new Vector
-    get: function() {
-      if ( this.__pools.length > 0 ) {
-        return this.__pools.pop();
+  var PoolCreator = function() {
+    return {
+      __pools: [],
+      // Get a new Vector
+      get: function() {
+        if ( this.__pools.length > 0 ) {
+          return this.__pools.pop();
+        }
+        console.error( "pool ran out!");
+      },
+      // Release a vector back into the pool
+      add: function( v ) {
+        this.__pools.push( v );
       }
-      console.error( "pool ran out!");
-    },
-    // Release a vector back into the pool
-    add: function( v ) {
-      this.__pools.push( v );
-    }
+    };
   };
 
   var updaterObject = function(updater_func, update_type) {
@@ -85,6 +87,7 @@
   var prepareParticleGeometry = function(particle_count) {
     // sets up three.js side of things, the passing of values to shader.
     var particles = new THREE.Geometry();
+    var Pool = new PoolCreator();
     for (var i = 0; i < particle_count; i++) {
       particles.vertices.push(new THREE.Vector3(0, 0, 0));
       Pool.add(i);
@@ -132,7 +135,8 @@
       uniforms: uniforms,
       particleCloud: particleCloud,
       particles: particles,
-      Pool: Pool
+      Pool: Pool,
+      shaderMaterial: shaderMaterial
     };
   };
 
@@ -181,7 +185,7 @@ angular.module('audioVizApp')
 
     var composer;
     var scene, camera, attributes, uniforms, particleCloud, particles, Pool, beat_counter;
-    var emitter, pointLight, emitter_position;
+    var emitter, pointLight, emitter_position, material;
     $scope.scene_init = function(renderer, width, height) {
       beat_counter = BeatCounter(60);
       scene = new THREE.Scene();
@@ -212,6 +216,7 @@ angular.module('audioVizApp')
       uniforms = a.uniforms;
       particles = a.particles;
       Pool = a.Pool;
+      material = a.shaderMaterial;
 
       scene.add(particleCloud);
       initEmitters();
@@ -357,5 +362,9 @@ angular.module('audioVizApp')
       composer.render();
     };
 
-
+    $scope.$on('$destroy', function() {
+      console.log(scene);
+      particleCloud.geometry.dispose();
+      material.dispose();
+    });
   });

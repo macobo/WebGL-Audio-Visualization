@@ -45,7 +45,7 @@ angular.module('audioVizApp', ['ngRoute', 'ngAnimate', 'angulartics', 'angularti
       .when('/thankyou', {
         templateUrl: 'views/easteregg.html',
         controller: 'EasterEggCtrl',
-        AnimName: 'EasterEgg'
+        //AnimName: 'EasterEgg'
       })
       .otherwise({
         redirectTo: '/particles'
