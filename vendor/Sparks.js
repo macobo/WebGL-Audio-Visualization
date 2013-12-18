@@ -244,6 +244,17 @@ SPARKS.SteadyCounter.prototype.updateEmitter = function(emitter, time) {
 	return actualRelease;
 };
 
+SPARKS.SteadyCounter.prototype.setRate = function(rate) {
+  //console.log(rate, this, this.oldRate, this.rate);
+  this.oldRate = this.rate;
+  this.rate = rate;
+};
+
+SPARKS.SteadyCounter.prototype.restore = function() {
+  this.rate = this.oldRate || this.rate;
+  console.log(this.rate, this.oldRate);
+};
+
 
 /*
  * Shot Counter produces specified particles

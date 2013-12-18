@@ -300,17 +300,22 @@ spectrum canvas {
   margin: 0px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003251}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003252}}
+.controls canvas {
+  background-color: white;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003254}}
 .box-show-setup {
   height: 0px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003253}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003256}}
 .box-show-setup.box-show-start {
   height: 100%;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003257}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003260}}
 .box.ng-hide-add, .box.ng-hide-remove {
   -webkit-transition: all ease 0.3s;
   -moz-transition: all ease 0.3s;
@@ -319,23 +324,23 @@ spectrum canvas {
   display: block !important;
   overflow: hidden;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003262}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003265}}
 .box.ng-hide-add {
   max-height: 500px;
   opacity: 1;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003266}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003269}}
 .box.ng-hide-add.ng-hide-add-active, .box.ng-hide-remove {
   max-height: 0px;
   opacity: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003270}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003273}}
 .box.ng-hide-remove.ng-hide-remove-active {
   max-height: 500px;
   opacity: 1;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003275}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003278}}
 .width-box.ng-hide-add, .width-box.ng-hide-remove {
   -webkit-transition: all ease 0.1s;
   -moz-transition: all ease 0.1s;
@@ -344,23 +349,23 @@ spectrum canvas {
   display: block !important;
   overflow: hidden;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003280}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003283}}
 .width-box.ng-hide-add {
   max-width: 500px;
   max-height: 500px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003284}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003287}}
 .width-box.ng-hide-add.ng-hide-add-active, .width-box.ng-hide-remove {
   max-width: 0px;
   max-height: 0px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003288}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003291}}
 .width-box.ng-hide-remove.ng-hide-remove-active {
   max-width: 500px;
   max-height: 500px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003294}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003297}}
 .slide-left-animation.ng-enter, .slide-left-animation.ng-leave {
   -webkit-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
   -moz-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
@@ -372,24 +377,24 @@ spectrum canvas {
   right: 0;
   min-height: 1000px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003301}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003304}}
 .slide-left-animation.ng-enter {
   left: 100%;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003303}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003306}}
 .slide-left-animation.ng-enter.ng-enter-active {
   left: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003305}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003308}}
 .slide-left-animation.ng-leave {
   left: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003307}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003310}}
 .slide-left-animation.ng-leave.ng-leave-active {
   left: -100%;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003311}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003314}}
 .slide-right-animation.ng-enter, .slide-right-animation.ng-leave {
   -webkit-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
   -moz-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
@@ -401,19 +406,19 @@ spectrum canvas {
   right: 0;
   min-height: 1000px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003318}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003321}}
 .slide-right-animation.ng-enter {
   left: -100%;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003320}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003323}}
 .slide-right-animation.ng-enter.ng-enter-active {
   left: 0%;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003322}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003325}}
 .slide-right-animation.ng-leave {
   left: 0%;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003324}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/macobo\/projects\/WebGL-Audio-Visualization\/css\/main\.sass}line{font-family:\00003327}}
 .slide-right-animation.ng-leave.ng-leave-active {
   left: 100%;
 }
