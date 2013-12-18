@@ -7,11 +7,11 @@ var drift = function(base, distance) {
 };
 
 angular.module('audioVizApp')
-  .controller('EasterEggCtrl', function($scope, AudioService, Dancer, BeatCounter, CircularBuffer) {
+  .controller('EasterEggCtrl', function($timeout, $scope, AudioService, Dancer, BeatCounter, CircularBuffer) {
     $scope.textMeasurements = {
       text: 'THANK YOU',
       font: '93px ituner',
-      width: 600,
+      width: 700,
       height: 100,
       depth: 20,
       displayTo: -300
@@ -192,7 +192,7 @@ angular.module('audioVizApp')
 
       addAction(emitter, function(e, particle) {
         if (!$scope.particles.collapse) return;
-        var direction = particle.position.clone().normalize().negate().multiplyScalar(50);
+        var direction = particle.position.clone().normalize().negate().multiplyScalar(100);
         var acc = new THREE.Vector3(30, 0, 0);
 
         particle.acceleration = direction;
@@ -240,5 +240,16 @@ angular.module('audioVizApp')
       console.log(scene);
       particleCloud.geometry.dispose();
       material.dispose();
+    });
+
+    $(window).keypress(function(e) {
+      console.log(e, e.keyCode);
+      if (e.keyCode == 32) {
+        console.log("Wohoo!");
+        $scope.particles.collapse = true;
+        setTimeout(function() {
+          $scope.particles.collapse = false;
+        }, 3000);
+      }
     });
   });

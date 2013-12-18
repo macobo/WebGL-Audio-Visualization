@@ -14,10 +14,10 @@ angular.module('audioVizApp')
         CONVERSION_COEFFICIENT = 0.93;
     var service = {
       frequency_range: [0, 50],
-      treshold: 0.1,
+      treshold: 0.08,
       current_treshold: 0.1,
       decay: 0.02,
-      decay_factor: 0.93,
+      decay_factor: 0.85,
       is_beat: false
     };
 
