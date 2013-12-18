@@ -4,10 +4,10 @@ WebGL-Audio-Visualization
 The demo can be accessed via: http://macobo.github.io/WebGL-Audio-Visualization/. Make sure you have WebGL and flash (for audio) enabled.
 
 ## Introduction
-
+
 This project is a collection of audio visualization animations made as a project for the course [Computer Graphics at University of Tartu](https://courses.cs.ut.ee/2013/cg/Main/Projects). 
 
-## Animations
+## Results
 
 In the project we implemented 4 different animations, with 2 more being a reparametrization of one of them.
 
@@ -43,7 +43,26 @@ When we shift every vertex in the sphere according to some frequencies of the sp
 ### [Terrain](http://macobo.github.io/WebGL-Audio-Visualization/#/terrain)
 [![](http://macobo.github.io/WebGL-Audio-Visualization/doc/img/terrain1_th.png)](http://macobo.github.io/WebGL-Audio-Visualization/doc/img/terrain1.png)
 
+A terrain growing and changing according to the current volume of the music. Also introduced first rudementary beat detection and has user-modifyable parameters that control the beat detection and smoothness and size of the terrain.
 
+### [Particles](http://macobo.github.io/WebGL-Audio-Visualization/#/particles)
+[![](http://macobo.github.io/WebGL-Audio-Visualization/doc/img/particles1_th.png)](http://macobo.github.io/WebGL-Audio-Visualization/doc/img/particles1l.png)
+
+A particle animation demonstrating the beat detection system. New particles appear and shoot out according to the current tempo of the song playing, with many more particles appearing on new beats.
+
+## Main complications
+
+### Beat detection
+
+Beat detection sadly isn't very easy to do, especially in real-time. One way to discover beats is to look at each at the sound frequency spectrum (the output of fast-fourier transform) and compare it to previous and future frames, looking whether it is peaking or not. The problem with doing that in real-time is that we don't have access to the future sound yet and have to resort to other crude heuristics.
+
+Our current solution is to use a decaying threshold. Each frame, the maximum value of the frequency spectrum is found (aka the maximal amplitude). That is compared to a threshold. 
+
+If the value is larger than the threshold, then set the value to be the new threshold, if not, multiply the current threshold by a factor a little bit smaller than 1 (e.g. 0.98), making sure the treshold wouldn't fall below a certain limit. The limit is neccessary because otherwise it will start classifying noise or simply quiet music as beats.
+
+### Three.js fragmentation
+
+The three.js library is still under heavy development. Sadly, this means that many of the libraries developed for three.js need heavy modifications to work on the latest version. We ran into this issue twice - once when updating the version given by three.js boilerplate and another time when experimenting with particle engines.
 
 ## References
 
