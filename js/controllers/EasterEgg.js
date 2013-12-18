@@ -10,8 +10,8 @@ angular.module('audioVizApp')
   .controller('EasterEggCtrl', function($timeout, $scope, AudioService, Dancer, BeatCounter, CircularBuffer) {
     $scope.textMeasurements = {
       text: 'THANK YOU',
-      font: '93px ituner',
-      width: 700,
+      font: '93px Verdana',
+      width: 900,
       height: 100,
       depth: 20,
       displayTo: -300
@@ -82,7 +82,7 @@ angular.module('audioVizApp')
       //camera = new THREE.PerspectiveCamera( 70, width / height, 1, 2000 );
       camera = new THREE.PerspectiveCamera( 60, width/height, 1, 2000 );
       
-      camera.position.set( 0, 0, 350 );
+      camera.position.set( 0, 0, 500 );
       camera.lookAt( scene.position );
 
       // transparently support window resize
