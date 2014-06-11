@@ -6,7 +6,8 @@ The demo can be accessed via: http://macobo.github.io/WebGL-Audio-Visualization/
 ## Introduction
 
 This project is a collection of audio visualization animations made as a project for the course [Computer Graphics at University of Tartu](https://courses.cs.ut.ee/2013/cg/Main/Projects). 
-We also have a poster available: [PDF](http://macobo.github.io/WebGL-Audio-Visualization/doc/poster.pdf)
+
+We also have a poster available: [PDF](https://github.com/macobo/WebGL-Audio-Visualization/blob/gh-pages/doc/poster.pdf)
 
 ## Results
 
